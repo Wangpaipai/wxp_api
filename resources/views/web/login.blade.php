@@ -93,7 +93,6 @@
                         .then(function (response) {
                             var data = response.data;
                             if(data.status){
-                                alert(that.succUrl);
                                 location.href = that.succUrl;
                             }else{
                                 $('#checkCode').attr('src','{{ captcha_src() }}' + '?' + Math.random());

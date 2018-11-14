@@ -24,7 +24,8 @@ Route::group(['middleware' => 'loginTrue'], function () {
 	Route::get('/','IndexController@index')->name('web.index');
 
 	Route::prefix('project')->group(function($route){
-		$route->get('/create','ProjectController@projectCreateView')->name('web.create.view');
+		$route->get('/create','ProjectController@projectCreate')->name('web.create');
+		$route->get('/list','ProjectController@projectList')->name('web.project.list');
 	});
 });
 

@@ -65,41 +65,29 @@
             </div>
             <!-- /.row -->
             <div class="row" id="sortable">
-                {{--{{foreach $create_projects as $create_project}}--}}
-                    {{--{{$project_id = $create_project.id}}--}}
-                    {{--{{$user_id = $create_project.user_id}}--}}
-                    {{--<div class="col-lg-3 view-project js_viewProject pannel-project" data-url="{{url("project/{{id_encode($create_project.id)}}")}}">--}}
-                        {{--<div class="panel panel-default">--}}
-                            {{--<div class="panel-heading">--}}
-                            {{--<span class="head-title">--}}
-                                {{--<a href="javascript:void(0);" class="drag-sort fa hidden-xs fa-navicon js_dragProjectBtn" title='拖拽排序' data-id="{{$create_project.id}}"></a>--}}
-                                {{--{{$create_project.title|truncate:12}}--}}
-                            {{--</span>--}}
-                            {{--<span class="head-btn">--}}
-                                {{--{{if \app\member::has_rule({{$create_project.id}}, 'project', 'update')}}--}}
-                                    {{--<a class="fa hidden-xs fa-pencil js_addProjectBtn" data-title='编辑项目' data-id="{{$create_project.id}}"></a>--}}
-                                {{--{{/if}}--}}
-
-                                {{--{{if \app\member::has_rule({{$create_project.id}}, 'project', 'delete')}}--}}
-                                    {{--<a class="fa hidden-xs fa-trash-o js_deleteProjectBtn" data-title='删除项目' data-id="{{$create_project.id}}"></a>--}}
-                                {{--{{/if}}--}}
-
-                                {{--{{if \app\member::has_rule({{$create_project.id}}, 'project', 'transfer')}}--}}
-                                    {{--<a class="fa hidden-xs fa-exchange js_transferProjectBtn" data-title='转让项目' data-id="{{$create_project.id}}"></a>--}}
-                                {{--{{/if}}--}}
-                            {{--</span>--}}
-                            {{--</div>--}}
-                            {{--<div class="panel-body">--}}
-                                {{--<p>{{$create_project.intro}}</p>--}}
-                            {{--</div>--}}
-                            {{--<div class="panel-footer">--}}
-                                {{--项目创建时间({{$create_project.add_time}})--}}
-                                {{--<br>--}}
-                                {{--最近更新时间({{$create_project.update_time}})--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                     {{--</div>--}}
-                {{--{{/foreach}}--}}
+                    <div class="col-lg-3 view-project js_viewProject pannel-project" v-for="item in project">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                            <span class="head-title">
+                                <a href="javascript:void(0);" class="drag-sort fa hidden-xs fa-navicon js_dragProjectBtn" title='' :data-id="item.id"></a>
+                                @{{ item.name }}
+                            </span>
+                            <span class="head-btn">
+                                <a class="fa hidden-xs fa-pencil js_addProjectBtn" data-title='编辑项目' :data-id="item.id"></a>
+                                <a class="fa hidden-xs fa-trash-o js_deleteProjectBtn" data-title='删除项目' :data-id="item.id"></a>
+                                <a class="fa hidden-xs fa-exchange js_transferProjectBtn" data-title='转让项目' :data-id="item.id"></a>
+                            </span>
+                            </div>
+                            <div class="panel-body">
+                                <p>@{{ item.brief }}</p>
+                            </div>
+                            <div class="panel-footer">
+                                项目创建时间(@{{ item.created_at }})
+                                <br>
+                                最近更新时间(@{{ item.updated_at }})
+                            </div>
+                        </div>
+                     </div>
 
                     <!-- /.col-lg-4 -->
 
@@ -199,7 +187,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary js_submit">提交</button>
+                    <button type="button" @click="createProject" class="btn btn-primary js_submit">提交</button>
                 </div>
 
             </div>
@@ -271,6 +259,122 @@
 
     <script>
         $(function(){
+            function CheckUrl(url){
+                var reg=/^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/;
+                if(!reg.test(url)){
+                    return false;
+                } else{
+                    return true;
+                }
+            }
+            function timestampToTime(timestamp) {
+                var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+                var Y = date.getFullYear() + '-';
+                var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+                var D = date.getDate() + ' ';
+                var h = date.getHours() + ':';
+                var m = date.getMinutes() + ':';
+                var s = date.getSeconds();
+                return Y+M+D+h+m+s;
+            }
+
+            var app = new Vue({
+                el:'#wrapper',
+                data:{
+                    create:{
+                        param:[
+                            {name:'formal',title:'正式环境',url:''}
+                        ],
+                        is_show:1
+                    },
+                    isChecked:true,
+                    isRequest:true,
+                    createUrl:'{{ route('web.create') }}',
+                    project:[],
+                    projectListUrl:'{{ route('web.project.list') }}'
+                },
+                created: function () {
+                    var that = this;
+                    axios.get(this.projectListUrl,'')
+                    .then(function (response) {
+                        var data = response.data;
+                        if(data.status){
+                            for(let item in data.data){
+                                data.data[item].created_at = timestampToTime(data.data[item].created_at);
+                                data.data[item].updated_at = timestampToTime(data.data[item].updated_at);
+                                that.project.push(data.data[item]);
+                            }
+                        }else{
+                            layer.msg(data.msg,{icon:2,time:2000});
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log('error');
+                    });
+                },
+                methods:{
+                    createParam:function(event){
+                        this.create.param.push({});
+                    },
+                    removeParam:function(event){
+                        var index = event.srcElement.dataset.index;
+                        this.create.param.splice(index,1);
+                        if(this.create.param.length == 0){
+                            this.create.param.push({});
+                        }
+                    },
+                    createProject:function(event){
+                        var that = this;
+                        var data = that.create;
+                        that.isRequest = true;
+                        if(!data.name){
+                            that.isRequest = false;
+                            return layer.msg('请输入项目名称',{icon:2,time:2000});
+                        }
+                        if(!data.brief){
+                            that.isRequest = false;
+                            return layer.msg('请输入项目简介',{icon:2,time:2000});
+                        }
+                        if(!data.brief){
+                            that.isRequest = false;
+                            return layer.msg('请输入项目简介',{icon:2,time:2000});
+                        }
+                        for(item in data.param){
+                            if(!data.param[item].name){
+                                that.isRequest = false;
+                                return layer.msg('请输入环境标识',{icon:2,time:2000});
+                            }
+                            if(!data.param[item].title){
+                                that.isRequest = false;
+                                return layer.msg('请输入环境名称',{icon:2,time:2000});
+                            }
+                            if(!data.param[item].url || !CheckUrl(data.param[item].url)){
+                                that.isRequest = false;
+                                return layer.msg('请输入带http、https协议的环境地址',{icon:2,time:2000});
+                            }
+                        }
+                        if(that.isRequest){
+                            axios.get(this.createUrl,{
+                                params:this.create
+                            })
+                            .then(function (response) {
+                                var data = response.data;
+                                if(data.status){
+                                    data.data.created_at = timestampToTime(data.data.created_at);
+                                    data.data.updated_at = timestampToTime(data.data.updated_at);
+                                    that.project.push(data.data);
+                                    $('.btn-default').click();
+                                }else{
+                                    layer.msg(data.msg,{icon:2,time:2000});
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log('error');
+                            });
+                        }
+                    }
+                },
+            });
 
             // 拖拽排序
             var el = document.getElementById('sortable');

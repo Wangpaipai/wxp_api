@@ -44,8 +44,8 @@
 
 </body>
 
-<script src="{{ asset('static/js/html5shiv.js') }}"></script>
-<script src="{{ asset('static/js/respond.min.js') }}"></script>
+{{--<script src="{{ asset('static/js/html5shiv.js') }}"></script>--}}
+{{--<script src="{{ asset('static/js/respond.min.js') }}"></script>--}}
 <script src="{{ asset('static/plugins/jquery/jquery.min.js') }}"></script>
 <script src="{{ asset('static/plugins/bootstrap/dist/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('static/plugins/metisMenu/dist/metisMenu.min.js') }}"></script>
