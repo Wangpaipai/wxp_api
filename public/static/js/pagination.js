@@ -70,8 +70,7 @@
             setButtonClass: function (isNextButton) {
                 if (isNextButton) {
                     return this.cur >= this.all ? "page-button-disabled" : ""
-                }
-                else {
+                } else {
                     return this.cur <= 1 ? "page-button-disabled" : ""
                 }
             }

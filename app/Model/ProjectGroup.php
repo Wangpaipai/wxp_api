@@ -78,4 +78,29 @@ class ProjectGroup extends Model
 			->select($field)
 			->get();
 	}
+
+	/**
+	 * 获取当前用户对项目的状态
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/15 14:17
+	 * @param $uid
+	 * @return mixed
+	 */
+	public function getUserGroup($uid,$project_id)
+	{
+		return $this->where('uid',$uid)->where('project_id',$project_id)->where('apply','<>',self::APPLY_FALSE)->first(['apply']);
+	}
+
+	/**
+	 * 获取当前用户对项目的申请状态
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/15 15:47
+	 * @param $project_id
+	 * @param $uid
+	 * @return mixed
+	 */
+	public function getGroupCount($project_id,$uid)
+	{
+		return $this->where('uid',$uid)->where('project_id',$project_id)->where('apply','<>',self::APPLY_FALSE)->count();
+	}
 }

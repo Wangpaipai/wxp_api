@@ -24,6 +24,7 @@ Route::group(['middleware' => 'loginTrue'], function () {
 	Route::get('/','IndexController@index')->name('web.index');
 	Route::get('/loginOut','IndexController@loginOut')->name('web.loginOut');
 	Route::get('/loginHistory','IndexController@loginHistory')->name('web.loginHistory');
+	Route::get('/password/update','IndexController@passwordUpdate')->name('web.password.update');
 
 	Route::prefix('project')->group(function($route){
 		$route->get('/create','ProjectController@projectCreate')->name('web.project.create');
@@ -32,7 +33,10 @@ Route::group(['middleware' => 'loginTrue'], function () {
 		$route->get('/list','ProjectController@projectList')->name('web.project.list');
 		$route->get('/remove','ProjectController@projectRemove')->name('web.project.remove');
 		$route->get('/search','ProjectController@search')->name('web.project.search');
-		$route->get('/apply','ProjectController@apply')->name('web.project.apply');
+		$route->get('/search/request','ProjectController@searchRequest')->name('web.project.search.request');
+		$route->get('/apply','ProjectController@searchApply')->name('web.project.apply');
+		$route->get('/apply/list','ProjectController@applyList')->name('web.project.applyList');
+		$route->get('/apply/getlist','ProjectController@getApplyList')->name('web.project.apply.getlist');
 	});
 });
 

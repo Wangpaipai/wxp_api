@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Model\User;
 use Illuminate\Http\Request;
 class IndexController extends Controller
 {
@@ -34,5 +35,19 @@ class IndexController extends Controller
 	{
 		$request->session()->forget('user');
 		return redirect()->route('web.login');
+	}
+
+	public function passwordUpdate(Request $request)
+	{
+		$param = $request->all();
+		$user = session('user');
+		if(password_verify($param['ypwd'],$user->password)){
+			$user->password = password_hash($param['password'],PASSWORD_DEFAULT);
+			$user->save();
+			$request->session()->forget('user');
+			return returnCode(1);
+		}else{
+			return returnCode(0,'密码输入错误');
+		}
 	}
 }

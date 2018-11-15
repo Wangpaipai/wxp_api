@@ -7,28 +7,23 @@
             <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="javascript:void(0);">
-{{--            {{if $project}}当前项目:{{$project.title}}{{else}}{{get_config('name')}}{{/if}}--}}
             王小牌API管理系统
         </a>
     </div>
-    <!-- /.navbar-header -->
     <ul class="nav navbar-top-links navbar-right">
 
         <li class="dropdown">
-            <a class="dropdown-toggle" href="{{url('project/select')}}">
+            <a class="dropdown-toggle" href="{{ route('web.index') }}">
                 <i class="fa fa fa-random fa-fw"></i> 切换项目
             </a>
         </li>
 
-        <!-- /.dropdown -->
         <li class="dropdown js_notifyDropdown">
 
 {{--            {{include_file name="notify/load"}}--}}
 
-            <!-- /.dropdown-alerts -->
         </li>
 
-        <!-- /.dropdown -->
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 {{ $user->name }}
@@ -47,9 +42,7 @@
                 <li><a class="js_logoutBtn" href="{{ route('web.loginOut') }}"><i class="fa fa-sign-out fa-fw"></i> 退出登录</a>
                 </li>
             </ul>
-            <!-- /.dropdown-user -->
         </li>
-        <!-- /.dropdown -->
     </ul>
     <!-- /.navbar-top-links -->
     {{--{{if $sidebar}}--}}

@@ -45,3 +45,24 @@ if(!function_exists('verifyEmail')){
 		}
 	}
 }
+
+if(!function_exists('active')){
+	/**
+	 * 检测当前路由和输入路由是否一致，返回默认值
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/15 16:18
+	 * @param $name
+	 * @param string $active
+	 * @return string
+	 */
+	function active($name,$active = 'active')
+	{
+		$routeName = Route::currentRouteName();
+		if($routeName == $name){
+			return $active;
+		}else{
+			return '';
+		}
+	}
+}
+

@@ -8,6 +8,7 @@
 
 namespace App\Model;
 
+use gophp\helper\arr;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
@@ -17,6 +18,10 @@ class Project extends Model
 	protected $dateFormat = 'U';
 	protected $guarded = [];//字段黑名单
 	protected $dates = ['deleted_at'];
+
+	//显示状态
+	const SHOW_TRUE = 1;
+	const SHOW_FALSE = 0;
 
 	/**
 	 * 返回项目列表
@@ -57,5 +62,32 @@ class Project extends Model
 	public function projectDel($project_id)
 	{
 		return $this->where('id',$project_id)->delete();
+	}
+
+	/**
+	 * 搜索项目列表
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/15 14:04
+	 * @param array $data
+	 * @return mixed
+	 */
+	public function searchProject(array  $data)
+	{
+		$field = [
+			'project.id','project.name','project.brief','project.uid','project.created_at','users.name as username'
+		];
+		return $this
+			->leftJoin('users','project.uid','=','users.id')
+//			->leftJoin('project_group','project.id','=','project_group.project_id')
+			->when($data['username'],function($query)use($data){
+				return $query->where('users.name','like','%' . $data['username'] . '%');
+			})
+			->when($data['name'],function($query)use($data){
+				return $query->where('project.name','like','%' . $data['name'] . '%');
+			})
+			->where('project.is_show',self::SHOW_TRUE)
+			->select($field)
+			->orderBy('project.created_at','desc')
+			->paginate(15);
 	}
 }

@@ -1,46 +1,5 @@
 
-<!-- 修改个人资料模态框 -->
-<div class="modal fade" id="js_settingProfileModal" tabindex="-1" role="dialog" aria-labelledby="settingLabel" aria-hidden="true">
-    <form id="js_settingProfileForm" role="form" action="{{url('user')}}" method="post">
-        <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                        <h4 class="modal-title" id="settingLabel">个人设置</h4>
-                    </div>
-                    <div class="modal-body">
 
-                        <div class="row">
-                            <div class="col-lg-12">
-
-                                <div class="form-group">
-                                    <label>登录邮箱</label>
-                                    <input name="email" class="form-control" value="{{\app\user::get_user_email()}}" disabled datatype="e">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>用户昵称</label>
-                                    <input name="name" class="form-control" value="{{\app\user::get_user_name()}}" placeholder="必填，建议写真实姓名以方便识别" name="nick_name" type="text" datatype="s2-10" nullmsg="请输入用户昵称！" errormsg="请输入2-10个由字母或汉字组成的字符">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>登录密码</label>
-                                    <input class="form-control" placeholder="修改密码需要重新登录，密码不少于6位" name="password" type="text" ignore="ignore" datatype="*6-20" nullmsg="请输入登录密码！" errormsg="请填写6-20个字符">
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary js_submit">保存</button>
-                    </div>
-                </div>
-            <!-- /.modal-content -->
-        </div>
-    </form>
-    <!-- /.modal-dialog -->
-</div>
 
 <script>
     $(function(){
