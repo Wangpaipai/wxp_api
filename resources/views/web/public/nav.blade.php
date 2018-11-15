@@ -44,7 +44,7 @@
                     <li><a href=""><i class="fa fa-gear fa-fw"></i> 管理中心</a></li>
                 @endif
                 <li class="divider"></li>
-                <li><a class="js_logoutBtn" href="#"><i class="fa fa-sign-out fa-fw"></i> 退出登录</a>
+                <li><a class="js_logoutBtn" href="{{ route('web.loginOut') }}"><i class="fa fa-sign-out fa-fw"></i> 退出登录</a>
                 </li>
             </ul>
             <!-- /.dropdown-user -->

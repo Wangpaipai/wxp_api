@@ -22,10 +22,17 @@ Route::group(['middleware' => 'loginFalse'], function () {
 
 Route::group(['middleware' => 'loginTrue'], function () {
 	Route::get('/','IndexController@index')->name('web.index');
+	Route::get('/loginOut','IndexController@loginOut')->name('web.loginOut');
+	Route::get('/loginHistory','IndexController@loginHistory')->name('web.loginHistory');
 
 	Route::prefix('project')->group(function($route){
-		$route->get('/create','ProjectController@projectCreate')->name('web.create');
+		$route->get('/create','ProjectController@projectCreate')->name('web.project.create');
+		$route->get('/update','ProjectController@projectUpdate')->name('web.project.update');
+		$route->get('/getData','ProjectController@getProjectData')->name('web.project.getData');
 		$route->get('/list','ProjectController@projectList')->name('web.project.list');
+		$route->get('/remove','ProjectController@projectRemove')->name('web.project.remove');
+		$route->get('/search','ProjectController@search')->name('web.project.search');
+		$route->get('/apply','ProjectController@apply')->name('web.project.apply');
 	});
 });
 

@@ -6,7 +6,7 @@
             z-index: 1;
             position: absolute;
             width: 200px;
-            margin-top: 51px;
+            /*margin-top: 51px;*/
         }
         #page-wrapper {
             position: inherit;
@@ -17,17 +17,17 @@
     }
 
 </style>
-<div class="navbar-default sidebar" role="navigation">
+<div class="navbar-default sidebar" role="navigation" style="margin-top: 0;">
     <div class="sidebar-nav navbar-collapse">
 
         <ul class="nav" id="side-menu">
 
             <li>
-                <a href="{{url('project/search')}}"><i class="fa fa-search fa-fw"></i> 搜索项目</a>
+                <a href="{{ route('web.project.search') }}"><i class="fa fa-search fa-fw"></i> 搜索项目</a>
             </li>
 
             <li>
-                <a href="{{url('apply')}}"><i class="fa fa-bell-o fa-fw"></i> 申请管理</a>
+                <a href="{{ route('web.project.apply') }}"><i class="fa fa-bell-o fa-fw"></i> 申请管理</a>
             </li>
 
 <!--            <li>-->
@@ -35,7 +35,7 @@
 <!--            </li>-->
 
             <li>
-                <a href="{{url('history/login')}}"><i class="fa fa-history fa-fw"></i> 登录历史</a>
+                <a href="{{ route('web.loginHistory') }}"><i class="fa fa-history fa-fw"></i> 登录历史</a>
             </li>
 
         </ul>
