@@ -29,4 +29,25 @@ class ProjectModel extends Model
 	{
 		return $this->where('project_id',$project_id)->delete();
 	}
+
+	/**
+	 * 获取项目菜单栏
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/16 14:30
+	 * @param $project_id
+	 * @return mixed
+	 */
+	public function getModelApi($project_id)
+	{
+		$field = [
+			'project_model.id','project_model.name','t.id as api_id','t.title'
+		];
+		return $this
+			->leftJoin('project_api as t','project_model.id','=','t.model_id')
+			->where('project_model.project_id',$project_id)
+			->whereNull('t.deleted_at')
+			->select($field)
+			->orderBy('project_model.created_at')
+			->get();
+	}
 }

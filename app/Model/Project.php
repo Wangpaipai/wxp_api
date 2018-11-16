@@ -90,4 +90,23 @@ class Project extends Model
 			->orderBy('project.created_at','desc')
 			->paginate(15);
 	}
+
+	/**
+	 * 获取当前项目详情
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/16 13:39
+	 * @param $project_id
+	 * @return mixed
+	 */
+	public function getProjectDetail($project_id)
+	{
+		$field = [
+			'project.id','project.name','project.uid','project.brief','project.param','project.is_show','users.name as username'
+		];
+		return $this
+			->leftJoin('users','project.uid','=','users.id')
+			->where('project.id',$project_id)
+			->select($field)
+			->first();
+	}
 }

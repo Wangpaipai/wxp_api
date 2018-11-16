@@ -1,50 +1,43 @@
-<div class="navbar-default sidebar" role="navigation">
+<div class="navbar-default sidebar" role="navigation" style="margin-top: 0">
     <div class="sidebar-nav navbar-collapse">
 
         <ul class="nav" id="side-menu">
 
             <li>
-                <a href="{{url("project/{{id_encode($project.id)}}")}}"><i class="fa fa-home fa-fw"></i> 项目主页</a>
+                <a href="{{ route('web.project.api.home',['id' => $project->id]) }}"><i class="fa fa-home fa-fw"></i> 项目主页</a>
             </li>
 
-            {{foreach $modules as $module}}
-            <li class="module-item js_moduleItem" data-id="{{$module.id}}">
+            @foreach($menu as $value)
+            <li class="module-item js_moduleItem" data-id="{{ $value['id'] }}">
                 <a href="javascript:void(0);"><i class="fa fa-fw fa-folder-open"></i>
-                    {{$module.title}}
-                    {{$project_id = $project.id}}
+                    {{ $value['name'] }}
 
                     <span class="fa fa-fw arrow"></span>
-
-                    {{if \app\member::has_rule($project_id, 'module', 'delete')}}
-                    <span class="fa hidden-xs fa-fw fa-trash-o js_deleteModuleBtn hidden" data-id="{{$module.id}}" data-title="删除模块"></span>
-                    {{/if}}
-
-                    {{if \app\member::has_rule($project_id, 'api', 'add')}}
-                    <span class="fa hidden-xs fa-fw fa-plus js_addApiBtn hidden" data-id="{{$module.id}}" data-title="添加接口"></span>
-                    {{/if}}
-
-                    {{if \app\member::has_rule($project_id, 'module', 'update')}}
-                    <span class="fa hidden-xs fa-fw fa-pencil  js_addModuleBtn hidden" data-id="{{$project.id}}-{{$module.id}}" data-title="编辑模块"></span>
-                    {{/if}}
+                    @if($group['is_del'])
+                        <span class="fa hidden-xs fa-fw fa-trash-o js_deleteModuleBtn" data-id="{{ $value['id'] }}" title="删除模块"></span>
+                    @endif
+                    @if($group['is_update'])
+                        <span class="fa hidden-xs fa-fw fa-plus js_addApiBtn" data-id="{{ $value['id'] }}" title="添加接口"></span>
+                    @endif
+                    @if($group['is_update'])
+                        <span class="fa hidden-xs fa-fw fa-pencil  js_addModuleBtn" data-id="{{ $value['id'] }}" title="编辑模块"></span>
+                    @endif
                 </a>
-                <ul class="nav nav-second-level collapse" id="api-menu-{{$module.id}}">
-                    {{$apis = \app\api::get_api_list($module.id)}}
-                    {{foreach $apis as $api}}
-                    {{$api_id = $api.id}}
-                    <li class="api-item js_apiItem" data-id="{{$api_id}}">
-                        <a href="{{url("api/{{id_encode($api_id)}}")}}" title="点击查看接口详情">
-                        <i class="fa fa-fw fa-files-o"></i>{{$api.title}}
+                <ul class="nav nav-second-level collapse" id="api-menu-{{ $value['id'] }}">
+                    @foreach($value['api'] as $v)
+                    <li class="api-item js_apiItem" data-id="{{ $v['api_id'] }}">
+                        <a href="" title="点击查看接口详情">
+                        <i class="fa fa-fw fa-files-o"></i>{{$api['title']}}
                         <i class="fa fa-fw fa-eye pull-right"></i>
                         </a>
                     </li>
-                    {{/foreach}}
+                    @endforeach
                 </ul>
                 <!-- /.nav-second-level -->
             </li>
-            {{/foreach}}
-
+            @endforeach
             <li>
-                <a class="js_addModuleBtn hidden-xs" data-id="{{$project.id}}-0" data-title="添加模块" href="javascript:void(0);"><i class="fa fa-fw fa-plus"></i> 添加模块</a>
+                <a class="js_addModuleBtn hidden-xs" data-id="{{ $project->id }}" data-title="添加模块" href="javascript:void(0);"><i class="fa fa-fw fa-plus"></i> 添加模块</a>
             </li>
 
         </ul>
@@ -63,7 +56,7 @@
             </div>
             <div class="modal-body">
 
-                <iframe id="js_addModuleIframe" style="min-height: 180px;" src="{{url('module/add')}}"></iframe>
+                {{--<iframe id="js_addModuleIframe" style="min-height: 180px;" src="{{url('module/add')}}"></iframe>--}}
 
             </div>
             <div class="modal-footer">
@@ -87,7 +80,7 @@
             </div>
             <div class="modal-body">
 
-                <iframe id="js_addApiIframe" style="min-height: 380px;" src="{{url('api/add')}}"></iframe>
+{{--                <iframe id="js_addApiIframe" style="min-height: 380px;" src="{{url('api/add')}}"></iframe>--}}
 
             </div>
             <div class="modal-footer">
@@ -104,7 +97,7 @@
 <!-- 删除模块模态框 -->
 <div class="modal fade" id="js_deleteModuleModal" tabindex="2" role="dialog">
     <div class="modal-dialog" role="document">
-        <form role="form" action="{{url('module/delete','','','json')}}" method="post">
+        <form role="form" method="post">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -117,7 +110,7 @@
                     </div>
                     <div class="form-group">
                         <input type="hidden" name="id" class="form-control">
-                        <input type="text" name='password' class="form-control" placeholder="重要操作，请输入登录密码" datatype="*" nullmsg="请输入登录密码!" errormsg="请输入正确的登录密码!">
+                        <input type="text" name='password' class="form-control" placeholder="重要操作，请输入登录密码" >
                     </div>
 
                 </div>
@@ -130,70 +123,3 @@
     </div><!-- /.modal-dialog -->
 </div>
 
-<script src="{{STATIC_URL}}/plugins/sortable/sortable.min.js"></script>
-
-<script>
-    $(function(){
-
-        //添加/编辑模块表单合法性验证
-        $("#js_addModuleForm").validateForm();
-
-        // 添加/编辑模块
-        $(".js_addModuleBtn").iframeModal({
-            clickItem: '.js_addModuleBtn', //modal元素
-            modalItem: '#js_addModuleModal', //modal元素
-            iframeItem: '#js_addModuleIframe', //提交按钮
-            submitBtn: '.js_submit'
-        });
-
-        //删除模块表单合法性验证
-        $("#js_deleteModuleModal form").validateForm();
-
-        // 删除模块
-        $(".js_deleteModuleBtn").click(function () {
-            // 阻止事件冒泡
-            event.stopPropagation();
-            var id = $(this).data('id');
-
-            if(id <= 0){
-                alert('请选择要删除的模块');
-            }
-
-            $('#js_deleteModuleModal input[name=id]').val(id);
-
-            $('#js_deleteModuleModal').modal('show');
-        });
-
-        // 添加/编辑接口
-        $(".js_addApiBtn").iframeModal({
-            clickItem: '.js_addApiBtn', //modal元素
-            modalItem: '#js_addApiModal', //modal元素
-            iframeItem: '#js_addApiIframe', //提交按钮
-            submitBtn: '.js_submit'
-        });
-
-        $(".js_moduleItem").mouseover(function(event){
-            event.stopPropagation();
-            $(this).find('span').removeClass('hidden');
-            $('.js_apiItem').find('span').addClass('hidden');
-
-        }).mouseout(function(event){
-            event.stopPropagation();
-            $(this).find('span').addClass('hidden');
-
-        });
-
-        $(".js_apiItem").mouseover(function(event){
-            event.stopPropagation();
-            $(this).find('span').removeClass('hidden');
-            $(this).find('.fa-eye').removeClass('hidden');
-
-        }).mouseout(function(event){
-            event.stopPropagation();
-            $(this).find('span').addClass('hidden');
-            $(this).find('.fa-eye').addClass('hidden');
-
-        });
-
-    });
-</script>

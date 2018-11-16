@@ -9,10 +9,13 @@
 namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
+use App\Model\Project;
+use App\Model\ProjectGroup;
 use Illuminate\Support\Facades\Request;
-
+use App\Http\Controllers\web\traits\ProjectAction;
 class ApiController extends Controller
 {
+	use ProjectAction;
 	/**
 	 * 项目主页
 	 * Created by：Mp_Lxj
@@ -21,6 +24,8 @@ class ApiController extends Controller
 	 */
 	public function index(Request $request,$id)
 	{
-		return view('web.project.home',['project_id' => $id]);
+		$this->returnCommon($id);
+		return view('web.project.home');
 	}
+
 }

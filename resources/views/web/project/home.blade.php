@@ -3,7 +3,21 @@
 
 @section('css')
     <style>
+        @media(min-width:768px) {
 
+            .sidebar {
+                z-index: 1;
+                position: absolute;
+                width: 200px;
+                margin-top: 51px;
+            }
+            #page-wrapper {
+                position: inherit;
+                margin: 0 0 0 200px;
+                padding: 0 30px;
+                border-left: 1px solid #e7e7e7;
+            }
+        }
     </style>
 @endsection
 
@@ -12,6 +26,7 @@
 
         <!-- Navigation -->
         @include('web.public.nav')
+        @include('web.public.project_sidebar')
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
@@ -74,4 +89,71 @@
 @endsection
 
 @section('js')
+    <script src="{{ asset('static/plugins/sortable/sortable.min.js') }}"></script>
+
+    <script>
+        $(function(){
+
+            //添加/编辑模块表单合法性验证
+            $("#js_addModuleForm").validateForm();
+
+            // 添加/编辑模块
+            $(".js_addModuleBtn").iframeModal({
+                clickItem: '.js_addModuleBtn', //modal元素
+                modalItem: '#js_addModuleModal', //modal元素
+                iframeItem: '#js_addModuleIframe', //提交按钮
+                submitBtn: '.js_submit'
+            });
+
+            //删除模块表单合法性验证
+            $("#js_deleteModuleModal form").validateForm();
+
+            // 删除模块
+            $(".js_deleteModuleBtn").click(function () {
+                // 阻止事件冒泡
+                event.stopPropagation();
+                var id = $(this).data('id');
+
+                if(id <= 0){
+                    alert('请选择要删除的模块');
+                }
+
+                $('#js_deleteModuleModal input[name=id]').val(id);
+
+                $('#js_deleteModuleModal').modal('show');
+            });
+
+            // 添加/编辑接口
+            $(".js_addApiBtn").iframeModal({
+                clickItem: '.js_addApiBtn', //modal元素
+                modalItem: '#js_addApiModal', //modal元素
+                iframeItem: '#js_addApiIframe', //提交按钮
+                submitBtn: '.js_submit'
+            });
+
+            $(".js_moduleItem").mouseover(function(event){
+                event.stopPropagation();
+                $(this).find('span').removeClass('hidden');
+                $('.js_apiItem').find('span').addClass('hidden');
+
+            }).mouseout(function(event){
+                event.stopPropagation();
+                $(this).find('span').addClass('hidden');
+
+            });
+
+            $(".js_apiItem").mouseover(function(event){
+                event.stopPropagation();
+                $(this).find('span').removeClass('hidden');
+                $(this).find('.fa-eye').removeClass('hidden');
+
+            }).mouseout(function(event){
+                event.stopPropagation();
+                $(this).find('span').addClass('hidden');
+                $(this).find('.fa-eye').addClass('hidden');
+
+            });
+
+        });
+    </script>
 @endsection
