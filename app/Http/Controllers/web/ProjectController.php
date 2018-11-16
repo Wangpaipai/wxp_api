@@ -267,9 +267,71 @@ class ProjectController extends Controller
 		return view('web.apply.index');
 	}
 
+	/**
+	 * 获取项目申请列表
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/16 8:55
+	 * @param Request $request
+	 * @return mixed
+	 */
 	public function getApplyList(Request $request)
 	{
 		$param = $request->all();
 		$ProjectGroup = new ProjectGroup();
+		$group = $ProjectGroup->getGroupApply($param)->toArray();
+		if($group['data']){
+			$result['total'] = $group['total'];
+			$result['apply'] = $group['data'];
+			return returnCode(1,'',$result);
+		}else{
+			return returnCode(0);
+		}
+	}
+
+	/**
+	 * 更新申请状态
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/16 9:34
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function applyUpdate(Request $request)
+	{
+		$param = $request->all();
+		$ProjectGroup = new ProjectGroup();
+		if(!in_array($param['apply'],[0,2])){
+			return returnCode(0,'状态错误');
+		}
+		if(!$param['group_id']){
+			return returnCode(0,'项目不存在');
+		}
+		$result = $ProjectGroup->applyUpdate($param);
+		if($result){
+			return returnCode(1,'操作成功');
+		}else{
+			return returnCode(0,'操作失败，请稍后再试');
+		}
+	}
+
+	/**
+	 * 退出项目
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/16 10:11
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function applyOut(Request $request)
+	{
+		$param = $request->all();
+		$ProjectGroup = new ProjectGroup();
+		if(!$param['project_id']){
+			return returnCode(0,'项目不存在');
+		}
+		$result = $ProjectGroup->applyOut($param['project_id']);
+		if($result){
+			return returnCode(1,'退出成功');
+		}else{
+			return returnCode(0,'退出失败,请稍后再试');
+		}
 	}
 }

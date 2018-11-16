@@ -24,6 +24,7 @@ Route::group(['middleware' => 'loginTrue'], function () {
 	Route::get('/','IndexController@index')->name('web.index');
 	Route::get('/loginOut','IndexController@loginOut')->name('web.loginOut');
 	Route::get('/loginHistory','IndexController@loginHistory')->name('web.loginHistory');
+	Route::get('/login/history','IndexController@getLoginHistory')->name('web.login.history');
 	Route::get('/password/update','IndexController@passwordUpdate')->name('web.password.update');
 
 	Route::prefix('project')->group(function($route){
@@ -37,6 +38,15 @@ Route::group(['middleware' => 'loginTrue'], function () {
 		$route->get('/apply','ProjectController@searchApply')->name('web.project.apply');
 		$route->get('/apply/list','ProjectController@applyList')->name('web.project.applyList');
 		$route->get('/apply/getlist','ProjectController@getApplyList')->name('web.project.apply.getlist');
+		$route->get('/apply/update','ProjectController@applyUpdate')->name('web.project.apply.update');
+		$route->get('/apply/out','ProjectController@applyOut')->name('web.project.apply.out');
+
+		Route::prefix('api')->group(function($route){
+			$route->get('/{id}','ApiController@index')->name('web.project.api.home');
+			$route->get('/group/{id}','ApiController@group')->name('web.project.api.group');
+		});
 	});
+
+
 });
 

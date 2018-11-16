@@ -65,7 +65,7 @@
             </div>
             <!-- /.row -->
             <div class="row" id="sortable">
-                    <div class="col-lg-3 view-project js_viewProject pannel-project" v-for="(item,index) in project">
+                    <div class="col-lg-3 view-project js_viewProject pannel-project" v-for="(item,index) in project" @click="locationProject(item.id,index,1)">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                             <span class="head-title">
@@ -111,15 +111,15 @@
         </div>
         <!-- /.row -->
         <div class="row">
-            <div class="col-lg-3 view-project js_viewProject pannel-project" v-for="(item,index) in group" data-url="">
+            <div class="col-lg-3 view-project js_viewProject pannel-project" v-for="(item,index) in group" @click="locationProject(item.id,index,2)">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @{{ item.name }}
                         <span class="head-btn">
-                        <a data-type="2" v-if="item.is_update" class="fa hidden-xs fa-pencil js_addProjectBtn" @click="objectUpdate" data-title='编辑项目' :data-id="item.id"></a>
-                        <a data-type="2" v-if="item.is_del" class="fa hidden-xs fa-trash-o js_deleteProjectBtn" @click="objectRemove" data-title='删除项目' :data-id="item.id" :data-index="index"></a>
-                        <a data-type="2" v-if="item.is_give" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive" data-title='转让项目' :data-id="item.id"></a>
-                        <a class="fa hidden-xs fa-sign-out js_quitProject" data-toggle="tooltip" title="退出项目" :data-id="item.id"></a>
+                        <a data-type="2" v-if="item.is_update" class="fa hidden-xs fa-pencil js_addProjectBtn" @click="objectUpdate" title='编辑项目' :data-id="item.id"></a>
+                        <a data-type="2" v-if="item.is_del" class="fa hidden-xs fa-trash-o js_deleteProjectBtn" @click="objectRemove" title='删除项目' :data-id="item.id" :data-index="index"></a>
+                        <a data-type="2" v-if="item.is_give" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive" title='转让项目' :data-id="item.id"></a>
+                        <a class="fa hidden-xs fa-sign-out js_quitProject" @click="projectOut(item.id,index)" data-toggle="tooltip" title="退出项目" :data-id="item.id"></a>
                     </span>
                     </div>
                     <div class="panel-body">
@@ -301,13 +301,52 @@
                         index:''
                     },
                     removeUrl:'{{ route('web.project.remove') }}',
-                    type:1
+                    type:1,
+                    projectOutUrl:'{{ route('web.project.apply.out') }}'
                 },
                 created: function () {
                     var that = this;
                     created(that);
                 },
                 methods:{
+                    locationProject:function(data,index,type){
+                        if(type == 2){
+                            var project = this.group;
+                            if(project[index].is_show){
+                                location.href = '/project/api/' + data;
+                            }else{
+                                layer.msg('无权限查看此项目',{icon:0,time:2000});
+                            }
+                        }else{
+                            location.href = '/project/api/' + data;
+                        }
+                    },
+                    projectOut:function(data,index){
+                        var that = this;
+                        layer.open({
+                            content: '请确认是否退出此项目?',
+                            yes: function(layIndex, layero){
+                                layer.close(layIndex);
+                                axios.get(that.projectOutUrl,{
+                                    params:{
+                                        project_id:data
+                                    }
+                                })
+                                .then(function (response) {
+                                    var data = response.data;
+                                    if(data.status){
+                                        that.group.splice(index,1);
+                                        layer.msg(data.msg,{icon:1,time:2000});
+                                    }else{
+                                        layer.msg(data.msg,{icon:2,time:2000});
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log('error');
+                                });
+                            }
+                        });
+                    },
                     projectDel:function(event){
                         var that = this;
                         if(!that.removeProject.id){

@@ -22,6 +22,7 @@ class ProjectGroup extends Model
 	const APPLY_FALSE = 0;//拒绝
 	const APPLY_LOADING = 1;//申请中
 	const APPLY_TRUE = 2;//同意
+	const APPLY_OUT = 3;//已退出
 
 	/**
 	 * 获取用户对项目的权限
@@ -88,7 +89,7 @@ class ProjectGroup extends Model
 	 */
 	public function getUserGroup($uid,$project_id)
 	{
-		return $this->where('uid',$uid)->where('project_id',$project_id)->where('apply','<>',self::APPLY_FALSE)->first(['apply']);
+		return $this->where('uid',$uid)->where('project_id',$project_id)->where('apply','<>',self::APPLY_FALSE)->where('apply','<>',self::APPLY_OUT)->first(['apply']);
 	}
 
 	/**
@@ -101,6 +102,56 @@ class ProjectGroup extends Model
 	 */
 	public function getGroupCount($project_id,$uid)
 	{
-		return $this->where('uid',$uid)->where('project_id',$project_id)->where('apply','<>',self::APPLY_FALSE)->count();
+		return $this->where('uid',$uid)->where('project_id',$project_id)->where('apply','<>',self::APPLY_OUT)->count();
+	}
+
+	/**
+	 * 获取申请列表
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/16 8:51
+	 * @param $data
+	 * @return mixed
+	 */
+	public function getGroupApply($data)
+	{
+		$field = [
+			'project_group.id','project_group.apply','project_group.created_at','t1.name as username','t2.name'
+		];
+		return $this
+			->leftJoin('users as t1','project_group.uid','=','t1.id')
+			->leftJoin('project as t2','project_group.project_id','=','t2.id')
+			->when(isset($data['name']) && $data['name'],function($query)use($data){
+				return $query->where('t2.name','like','%' . $data['name'] . '%');
+			})
+			->when(isset($data['username']) && $data['username'],function($query)use($data){
+				return $query->where('t1.name','like','%' . $data['username'] . '%');
+			})
+			->orderBy('project_group.created_at','desc')
+			->select($field)
+			->paginate(15);
+	}
+
+	/**
+	 * 修改项目组申请状态
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/16 9:32
+	 * @param array $data
+	 * @return mixed
+	 */
+	public function applyUpdate(array $data)
+	{
+		return $this->where('id',$data['group_id'])->update(['apply' => $data['apply']]);
+	}
+
+	/**
+	 * 退出项目
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/16 10:09
+	 * @param $project_id
+	 * @return mixed
+	 */
+	public function applyOut($project_id)
+	{
+		return $this->where('project_id',$project_id)->where('uid',session('user')->id)->update(['apply' => self::APPLY_OUT]);
 	}
 }

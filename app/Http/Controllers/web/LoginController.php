@@ -4,6 +4,7 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Model\User;
+use App\Model\UserLoginLog;
 use Illuminate\Http\Request;
 use Validator;
 class LoginController extends Controller
@@ -126,6 +127,10 @@ class LoginController extends Controller
 		//检测密码是否正确
 		if(password_verify($param['password'],$userData->password)){
 			session(['user' => $userData]);
+			$UserLoginLog = new UserLoginLog();
+			$UserLoginLog->ip = $request->getClientIp();
+			$UserLoginLog->uid = $userData->id;
+			$UserLoginLog->save();
 			return returnCode(1,'登录成功');
 		}else{
 			return returnCode(0,'帐号、密码错误!');

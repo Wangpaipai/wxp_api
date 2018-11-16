@@ -3,61 +3,12 @@
 
 @section('css')
     <style>
-        ul, li {
-            margin: 0px;
-            padding: 0px;
+        .del{
+            background: #d9534f !important;
         }
-
-        .page-bar {
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        .page-button-disabled {
-            color:#ddd !important;
-        }
-
-        .page-bar li {
-            list-style: none;
-            display: inline-block;
-        }
-
-        .page-bar li:first-child > a {
-            margin-left: 0px;
-        }
-
-        .page-bar a {
-            border: 1px solid #ddd;
-            text-decoration: none;
-            position: relative;
-            float: left;
-            padding: 6px 12px;
-            margin-left: -1px;
-            line-height: 1.42857143;
-            color: #337ab7;
-            cursor: pointer;
-        }
-
-        .page-bar a:hover {
-            background-color: #eee;
-        }
-
-        .page-bar .active a {
-            color: #fff;
-            cursor: default;
-            background-color: #337ab7;
-            border-color: #337ab7;
-        }
-
-        .page-bar i {
-            font-style: normal;
-            color: #d44950;
-            margin: 0px 4px;
-            font-size: 12px;
+        .refuse{
+            background: #d9534f !important;
+            border: 1px solid #d9534f !important;
         }
         @media(min-width:768px) {
 
@@ -120,7 +71,7 @@
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead>
                                     <tr>
-                                        <th>申请人/账号</th>
+                                        <th>申请人</th>
                                         <th>申请加入项目</th>
                                         <th>申请加入时间</th>
 
@@ -128,14 +79,16 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td ></td>
-                                        <td ></td>
-
-                                        <td ></td>
+                                    <tr v-for="(item,index) in apply">
+                                        <td >@{{ item.username }}</td>
+                                        <td >@{{ item.name }}</td>
+                                        <td >@{{ item.created_at }}</td>
                                         <td >
-                                            <a class="btn btn-success btn-xs js_passApplyBtn">通过</a>
-                                            <a class="btn btn-warning btn-xs disabled">已通过</a>
+                                            <a v-if="item.apply == 1" @click="applyUpdate(item.id,2,index)" class="btn btn-success btn-xs js_passApplyBtn">通过</a>
+                                            <a v-if="item.apply == 1" @click="applyUpdate(item.id,0,index)" class="btn btn-success btn-xs refuse">拒绝</a>
+                                            <a v-if="item.apply == 2" class="btn btn-warning btn-xs disabled">已通过</a>
+                                            <a v-if="item.apply == 0" class="btn btn-warning btn-xs disabled del">已拒绝</a>
+                                            <a v-if="item.apply == 3" class="btn btn-default btn-xs disabled">已退出</a>
                                         </td>
                                     </tr>
 
@@ -170,7 +123,7 @@
 @section('js')
     <script src="{{ asset('static/js/pagination.js') }}"></script>
     <script>
-        function requestApply(that,param) {
+        function requestApply(param,that) {
             that.isLoadingShow = true;
             that.altMsg = '加载中......';
             axios.get(that.applyUrl,{
@@ -187,12 +140,13 @@
                     }
                     that.apply = data.data.apply;
                 }else{
-                    that.altMsg = '暂无数据......';
+                    that.apply = [];
+                    that.altMsg = '暂无数据';
 //                            layer.msg(data.msg,{icon:2,time:2000});
                 }
             })
             .catch(function (error) {
-                console.log('error');
+                console.log(error);
             });
         }
         var app = new Vue({
@@ -207,10 +161,12 @@
                 param:{
                     name:'',
                     username:''
-                }
+                },
+                applyUpdateUrl:'{{ route('web.project.apply.update') }}'
             },
-            create:function(){
-
+            created:function(){
+                var that = this;
+                requestApply(that.param,that);
             },
             components: {
                 // 引用组件
@@ -218,9 +174,39 @@
             },
             methods:{
                 listen: function (data) {
-
+                    var that = this;
+                    var param = {
+                        name:that.param.name,
+                        username:that.param.username,
+                        page:data
+                    }
+                    requestApply(param,that);
                 },
-                applySearch:function(event){}
+                applySearch:function(event){
+                    var that = this;
+                    requestApply(that.param,that);
+                },
+                applyUpdate:function(group_id,apply,index){
+                    var that = this;
+                    axios.get(that.applyUpdateUrl,{
+                            params:{
+                                group_id:group_id,
+                                apply:apply
+                            }
+                        })
+                    .then(function (response) {
+                        var data = response.data;
+                        if(data.status){
+                            layer.msg(data.msg,{icon:1,time:2000});
+                            that.apply[index].apply = apply;
+                        }else{
+                            layer.msg(data.msg,{icon:2,time:2000});
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                }
             }
         })
     </script>

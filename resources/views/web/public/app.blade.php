@@ -41,7 +41,7 @@
 <body>
 
 @yield('content')
-        <!-- 修改个人资料模态框 -->
+
 @if(isset($user))
     <div class="modal fade" id="js_settingProfileModal" tabindex="-1" role="dialog" aria-labelledby="settingLabel" aria-hidden="true">
         <form id="js_settingProfileForm" role="form" method="post">
