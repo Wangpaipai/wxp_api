@@ -154,4 +154,40 @@ class ProjectGroup extends Model
 	{
 		return $this->where('project_id',$project_id)->where('uid',session('user')->id)->update(['apply' => self::APPLY_OUT]);
 	}
+
+	/**
+	 * 获取项目成员列表
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 10:01
+	 * @param $project_id
+	 * @return mixed
+	 */
+	public function getMemberList($project_id)
+	{
+		$field = [
+			't1.name','project_group.id','project_group.is_show','project_group.is_update','project_group.is_del','project_group.is_give',
+			'project_group.created_at','project_group.id'
+		];
+		return $this
+			->leftJoin('users as t1','project_group.uid','=','t1.id')
+			->where('project_id',$project_id)
+			->where('apply',self::APPLY_TRUE)
+			->orderBy('project_group.created_at','desc')
+			->select($field)
+			->orderBy('project_group.created_at','desc')
+			->paginate(15);
+	}
+
+	/**
+	 * 修改项目成员权限
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 14:00
+	 * @param $data
+	 * @param $role
+	 * @return mixed
+	 */
+	public function groupRoleUpdate($data,$role)
+	{
+		return $this->where('id',$data['id'])->update($role);
+	}
 }

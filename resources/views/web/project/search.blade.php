@@ -94,7 +94,7 @@
                                 </table>
                                 <p v-show="isLoadingShow" style="text-align: center">@{{ altMsg }}</p>
                                 <div class="col-sm-12" style="text-align: center">
-                                    <div id="app" v-if="all > 15">
+                                    <div id="app" v-if="total > 15">
                                         <vue-pagination :cur.sync="cur" :all.sync="all" @btn-click="listen"></vue-pagination>
                                     </div>
                                 </div>
@@ -131,8 +131,9 @@
                 var data = response.data;
                 if(data.status){
                     that.isLoadingShow = false;
-                    that.all = data.data.total;
+                    that.total = data.data.total;
                     that.cur = param.page ? param.page : 1;
+                    that.all = param.page_count;
                     for(let item in data.data.project){
                         data.data.project[item].created_at = timestampToTime(data.data.project[item].created_at);
                     }
@@ -144,7 +145,7 @@
                 }
             })
             .catch(function (error) {
-                console.log('error');
+                console.log(error);
             });
         }
 
@@ -153,6 +154,7 @@
             data:{
                 cur: 0,//当前页
                 all: 0,//总数
+                total:0,
                 param:{
                     name:'',
                     username:''

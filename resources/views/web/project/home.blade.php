@@ -22,11 +22,12 @@
 @endsection
 
 @section('content')
+
+    @include('web.public.nav')
+    @include('web.public.project_sidebar')
     <div id="wrapper">
 
         <!-- Navigation -->
-        @include('web.public.nav')
-        @include('web.public.project_sidebar')
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
@@ -48,13 +49,13 @@
                         @include('web.project.tab')
 
                         <div class="panel-body">
-                            <p class="text-muted"><label>项目名称：</label></p>
-                            <p class="text-muted"><label>项目创建人：</label></p>
-                            <p class="text-muted"><label>搜索状态：</label></p>
-                            <p class="text-muted"><label>创建时间：</label></p>
-                            <p class="text-muted"><label>更新时间：</label></p>
+                            <p class="text-muted"><label>项目名称：</label>{{ $project->name }}</p>
+                            <p class="text-muted"><label>项目创建人：</label>{{ $project->username }}</p>
+                            <p class="text-muted"><label>搜索状态：</label>{{ $project->is_show ? '可搜索' : '禁止搜索' }}</p>
+                            <p class="text-muted"><label>创建时间：</label>{{ $project->created_at }}</p>
+                            <p class="text-muted"><label>更新时间：</label>{{ $project->updated_at }}</p>
 
-                            <p class="text-muted"><label>项目描述：</label><span style="word-break:break-all"></span></p>
+                            <p class="text-muted"><label>项目描述：</label><span style="word-break:break-all">{{ $project->brief }}</span></p>
                             <p class="text-muted"><label>环境域名：</label>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover">
@@ -66,12 +67,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    @foreach($project->param as $value)
                                     <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td><code></code></td>
+                                        <td>{{ $value['name'] }}</td>
+                                        <td>{{ $value['title'] }}</td>
+                                        <td><code>{{ $value['url'] }}</code></td>
                                     </tr>
-
+                                    @endforeach
                                     </tbody>
                                 </table>
 

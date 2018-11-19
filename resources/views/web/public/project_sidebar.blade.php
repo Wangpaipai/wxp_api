@@ -18,8 +18,6 @@
                     @endif
                     @if($group['is_update'])
                         <span class="fa hidden-xs fa-fw fa-plus js_addApiBtn" data-id="{{ $value['id'] }}" title="添加接口"></span>
-                    @endif
-                    @if($group['is_update'])
                         <span class="fa hidden-xs fa-fw fa-pencil  js_addModuleBtn" data-id="{{ $value['id'] }}" title="编辑模块"></span>
                     @endif
                 </a>

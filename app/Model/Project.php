@@ -101,7 +101,8 @@ class Project extends Model
 	public function getProjectDetail($project_id)
 	{
 		$field = [
-			'project.id','project.name','project.uid','project.brief','project.param','project.is_show','users.name as username'
+			'project.id','project.name','project.uid','project.brief','project.param','project.is_show','users.name as username',
+			'project.created_at','project.updated_at'
 		];
 		return $this
 			->leftJoin('users','project.uid','=','users.id')

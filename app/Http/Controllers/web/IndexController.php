@@ -83,6 +83,7 @@ class IndexController extends Controller
 		if($log['data']){
 			$result['total'] = $log['total'];
 			$result['history'] = $log['data'];
+			$result['page_count'] = $log['last_page'];
 			return returnCode(1,'',$result);
 		}else{
 			return returnCode(0);

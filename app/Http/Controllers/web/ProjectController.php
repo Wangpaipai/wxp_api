@@ -199,6 +199,7 @@ class ProjectController extends Controller
 		//是否存在数据
 		if($project['data']){
 			$result['total'] = $project['total'];
+			$result['page_count'] = $project['last_page'];
 			$user = session('user');
 			//查看当前用户在项目的地位  1创建者  2申请中  3 参与者 4待加入
 			foreach($project['data'] as &$value){
@@ -282,6 +283,7 @@ class ProjectController extends Controller
 		if($group['data']){
 			$result['total'] = $group['total'];
 			$result['apply'] = $group['data'];
+			$result['page_count'] = $group['last_page'];
 			return returnCode(1,'',$result);
 		}else{
 			return returnCode(0);

@@ -12,6 +12,7 @@ namespace App\Http\Controllers\web\traits;
 use App\Model\Project;
 use App\Model\ProjectGroup;
 use App\Model\ProjectModel;
+use App\Model\User;
 
 trait ProjectAction
 {
@@ -66,6 +67,9 @@ trait ProjectAction
 	{
 		$Project = new Project();
 		$project_detail = $Project->getProjectDetail($project_id);
+		if($project_detail->param){
+			$project_detail->param = unserialize($project_detail->param);
+		}
 		view()->share('project',$project_detail);
 		return $project_detail;
 	}
@@ -77,8 +81,11 @@ trait ProjectAction
 	 * @param $project_id
 	 * @return mixed
 	 */
-	public function projectGroup($project_id,$project)
+	public function projectGroup($project_id,$project = '')
 	{
+		if(!$project){
+			$project = $this->projectDetail($project_id);
+		}
 		$ProjectGroup = new ProjectGroup();
 		$user = session('user');
 		if($user->id == $project->uid){
@@ -141,5 +148,54 @@ trait ProjectAction
 			}
 		}
 		return $res;
+	}
+
+	/**
+	 * 根据邮箱、用户名获取用户
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 13:47
+	 * @param $name
+	 * @return mixed
+	 */
+	public function getUsers($name)
+	{
+		$User = new User();
+		if(verifyEmail($name)){
+			$user = $User->getUserData(['username'=>$name],'email');
+		}else{
+			$user = $User->getUserData(['username'=>$name],'name');
+		}
+		return $user;
+	}
+
+	/**
+	 * 分析用户设置的权限
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 13:51
+	 * @param array $data
+	 * @return array
+	 */
+	public function paramData(array $data)
+	{
+		$role = [
+			'is_show' => 0,
+			'is_update' => 0,
+			'is_del' => 0,
+			'is_give' => 0,
+		];
+
+		if(in_array('show',$data)){
+			$role['is_show'] = 1;
+		}
+		if(in_array('update',$data)){
+			$role['is_update'] = 1;
+		}
+		if(in_array('delete',$data)){
+			$role['is_del'] = 1;
+		}
+		if(in_array('give',$data)){
+			$role['is_give'] = 1;
+		}
+		return $role;
 	}
 }
