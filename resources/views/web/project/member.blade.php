@@ -186,7 +186,8 @@
                 },
                 memberType:'add',
                 createGroup:'{{ route('web.project.api.group.create') }}',
-                updateGroup:'{{ route('web.project.api.group.update') }}'
+                updateGroup:'{{ route('web.project.api.group.update') }}',
+                removeGroup:'{{ route('web.project.api.group.remove') }}'
             },
             created:function(){
                 var that = this;
@@ -201,6 +202,36 @@
                 listen: function (data) {
                     var that = this;
                     getMemberList({project:that.project,page:data},that);
+                },
+                roleRemove:function(group){
+                    if(!group){
+                        return layer.msg('记录不存在',{icon:2,time:2000});
+                    }
+                    var that = this;
+                    layer.open({
+                        content: '请确认是否将此用户移除?',
+                        yes: function(layIndex, layero){
+                            layer.close(layIndex);
+                            axios.get(that.removeGroup,{
+                                params:{
+                                    group:group,
+                                    project:that.project
+                                }
+                            })
+                            .then(function (response) {
+                                var data = response.data;
+                                if(data.status){
+                                    layer.msg(data.msg,{icon:1,time:2000});
+                                    that.listen(1);
+                                }else{
+                                    layer.msg(data.msg,{icon:2,time:2000});
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
+                        }
+                    });
                 },
                 roleCreate:function(event){
                     var that = this;

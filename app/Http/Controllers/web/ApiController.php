@@ -85,6 +85,11 @@ class ApiController extends Controller
 	{
 		$param = $request->all();
 		$ProjectGroup = new ProjectGroup();
+		$group = $this->projectGroup($param['project']);
+		if(!$group['is_update']){
+			return returnCode(0,'无限制操作此项');
+		}
+
 		$user = $this->getUsers($param['name']);
 		if(!$user){
 			return returnCode(0,'用户不存在');
@@ -115,6 +120,12 @@ class ApiController extends Controller
 	public function updateGroup(Request $request)
 	{
 		$param = $request->all();
+
+		$group = $this->projectGroup($param['project']);
+		if(!$group['is_update']){
+			return returnCode(0,'无限制操作此项');
+		}
+
 		if(!$param['id']){
 			return returnCode(0,'项目不存在');
 		}
@@ -128,6 +139,34 @@ class ApiController extends Controller
 		}catch(\Exception $e){
 			DB::rollBack();
 			return returnCode(0,'修改失败');
+		}
+	}
+
+	/**
+	 * 移除项目成员
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 14:54
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function removeGroup(Request $request)
+	{
+		$param = $request->all();
+		$ProjectGroup = new ProjectGroup();
+
+		$group = $this->projectGroup($param['project']);
+		if(!$group['is_del']){
+			return returnCode(0,'无限制操作此项');
+		}
+
+		DB::beginTransaction();
+		try{
+			$ProjectGroup->groupDel($param['group']);
+			DB::commit();
+			return returnCode(1,'移除成功');
+		}catch(\Exception $e){
+			DB::rollBack();
+			return returnCode(0,'移除失败,请稍后再试');
 		}
 	}
 

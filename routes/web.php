@@ -47,6 +47,7 @@ Route::group(['middleware' => 'loginTrue'], function () {
 			$route->get('/member/group','ApiController@getGroup')->name('web.project.api.groupList');
 			$route->get('/create/group','ApiController@createGroup')->name('web.project.api.group.create');
 			$route->get('/update/group','ApiController@updateGroup')->name('web.project.api.group.update');
+			$route->get('/remove/group','ApiController@removeGroup')->name('web.project.api.group.remove');
 		});
 	});
 });

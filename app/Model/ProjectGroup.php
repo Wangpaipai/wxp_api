@@ -190,4 +190,16 @@ class ProjectGroup extends Model
 	{
 		return $this->where('id',$data['id'])->update($role);
 	}
+
+	/**
+	 * 移除项目成员
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 14:52
+	 * @param $group_id
+	 * @return mixed
+	 */
+	public function groupDel($group_id)
+	{
+		return $this->where('id',$group_id)->delete();
+	}
 }
