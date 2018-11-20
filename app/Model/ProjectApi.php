@@ -29,4 +29,16 @@ class ProjectApi extends Model
 	{
 		return $this->where('project_id',$project_id)->delete();
 	}
+
+	/**
+	 * 删除对应的api
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 17:17
+	 * @param $project_id
+	 * @return mixed
+	 */
+	public function removeApi($model)
+	{
+		return $this->where('model_id',$model)->delete();
+	}
 }

@@ -30,7 +30,9 @@ trait ProjectAction
 		if($project->uid != session('user')->id && (!$group || !$group->is_show)){
 			abort(404);
 		}
-		$this->projectModel($project_id);
+		$menu = $this->projectModel($project_id);
+
+		return ['project' => $project,'group' => $group,'menu' => $menu];
 	}
 
 	/**

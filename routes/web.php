@@ -49,6 +49,14 @@ Route::group(['middleware' => 'loginTrue'], function () {
 			$route->get('/update/group','ApiController@updateGroup')->name('web.project.api.group.update');
 			$route->get('/remove/group','ApiController@removeGroup')->name('web.project.api.group.remove');
 		});
+
+		Route::prefix('model')->group(function($route){
+			$route->get('/create','ApiController@createModel')->name('web.project.model.create');
+			$route->get('/update','ApiController@updateModel')->name('web.project.model.update');
+			$route->get('/detail','ApiController@getModelDetail')->name('web.project.model.detail');
+			$route->get('/remove','ApiController@removeModel')->name('web.project.model.remove');
+			$route->get('/list','ApiController@getMenu')->name('web.project.model.list');
+		});
 	});
 });
 

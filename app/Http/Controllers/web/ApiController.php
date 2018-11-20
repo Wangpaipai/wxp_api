@@ -10,7 +10,9 @@ namespace App\Http\Controllers\web;
 
 use App\Http\Controllers\Controller;
 use App\Model\Project;
+use App\Model\ProjectApi;
 use App\Model\ProjectGroup;
+use App\Model\ProjectModel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\web\traits\ProjectAction;
 use Illuminate\Support\Facades\DB;
@@ -168,6 +170,138 @@ class ApiController extends Controller
 			DB::rollBack();
 			return returnCode(0,'移除失败,请稍后再试');
 		}
+	}
+
+	/**
+	 * 添加模块
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 16:11
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function createModel(Request $request)
+	{
+		$param = $request->all();
+
+		$group = $this->projectGroup($param['project']);
+		if(!$group['is_update']){
+			return returnCode(0,'无限制操作此项');
+		}
+
+		if(!$param['project']){
+			return returnCode(0,'项目不存在');
+		}
+
+		$ProjectModel = new ProjectModel();
+		$data['project_id'] = $param['project'];
+		$data['name'] = $param['name'];
+		$res = $ProjectModel->create($data);
+
+		if($res){
+			return returnCode(1,'添加成功',$res);
+		}else{
+			return returnCode(0,'添加失败,请稍后再试');
+		}
+	}
+
+	/**
+	 * 获取模块详情
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 16:43
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function getModelDetail(Request $request)
+	{
+		$param = $request->all();
+		$ProjectModel = new ProjectModel();
+		$result = $ProjectModel->getModelData($param);
+		if($result){
+			return returnCode(1,'',$result);
+		}else{
+			return returnCode(0,'模块不存在');
+		}
+	}
+
+	/**
+	 * 更新模块信息
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 16:58
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function updateModel(Request $request)
+	{
+		$param = $request->all();
+
+		$group = $this->projectGroup($param['project']);
+		if(!$group['is_update']){
+			return returnCode(0,'无限制操作此项');
+		}
+
+		$ProjectModel = new ProjectModel();
+		DB::beginTransaction();
+		try{
+			$ProjectModel->updateModel($param);
+			DB::commit();
+			return returnCode(1,'修改成功');
+		}catch(\Exception $e){
+			DB::rollBack();
+			return returnCode(0,'修改失败,请稍后再试');
+		}
+	}
+
+	/**
+	 * 删除模块
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 17:16
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function removeModel(Request $request)
+	{
+		$param = $request->all();
+		if(!password_verify($param['pwd'],session('user')->password)){
+			return returnCode(0,'密码错误');
+		}
+
+		if(!$param['id'] || !$param['project']){
+			return returnCode(0,'模块不存在');
+		}
+		$group = $this->projectGroup($param['project']);
+		if(!$group['is_del']){
+			return returnCode(0,'无限制操作此项');
+		}
+		$ProjectModel = new ProjectModel();
+		$ProjectApi = new ProjectApi();
+
+		DB::beginTransaction();
+		try{
+			$ProjectModel->removeModel($param);
+			$ProjectApi->removeApi($param['id']);
+			DB::commit();
+			return returnCode(1,'删除成功');
+		}catch(\Exception $e){
+			DB::rollBack();
+			return returnCode(0,'删除失败,请稍后再试');
+		}
+	}
+
+	/**
+	 * 获取菜单
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/20 9:04
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function getMenu(Request $request)
+	{
+		$project = $request->input('project',0);
+		if(!$project){
+			return returnCode(0,'项目不存在');
+		}
+		$menu = $this->returnCommon($project);
+		return returnCode(1,'',$menu);
 	}
 
 }

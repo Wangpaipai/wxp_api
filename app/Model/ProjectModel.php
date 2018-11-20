@@ -50,4 +50,43 @@ class ProjectModel extends Model
 			->orderBy('project_model.created_at')
 			->get();
 	}
+
+	/**
+	 * 获取模块详情
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 16:41
+	 * @param $data
+	 * @return mixed
+	 */
+	public function getModelData($data)
+	{
+		$field = [
+			'id','name'
+		];
+		return $this->where('id',$data['id'])->where('project_id',$data['project'])->first($field);
+	}
+
+	/**
+	 * 更新模块信息
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 16:58
+	 * @param $data
+	 * @return mixed
+	 */
+	public function updateModel($data)
+	{
+		return $this->where('id',$data['id'])->where('project_id',$data['project'])->update(['name' => $data['name']]);
+	}
+
+	/**
+	 * 删除模块
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/19 17:15
+	 * @param $data
+	 * @return mixed
+	 */
+	public function removeModel($data)
+	{
+		return $this->where('id',$data['id'])->where('project_id',$data['project'])->delete();
+	}
 }
