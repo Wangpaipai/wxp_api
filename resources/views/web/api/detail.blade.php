@@ -164,7 +164,7 @@
                                             <td>{{ $value['name'] }}</td>
                                             <td>{{ $value['brief'] }}</td>
                                             <td>{{ $value['type'] }}</td>
-                                            <td>{{ $value['is_must'] ? 'Y' : 'N' }}</td>
+                                            <td>{{ $value['must'] }}</td>
                                             <td>{{ $value['default'] }}</td>
                                             <td>{{ $value['remark'] }}</td>
                                         </tr>
@@ -261,14 +261,15 @@
                                 接口删除后，该项目下所有字段将被立刻删除，不可恢复，请谨慎操作！
                             </div>
                             <div class="form-group">
-                                <input type="hidden" name="id" class="form-control">
-                                <input type="text" name='password' class="form-control" placeholder="重要操作，请输入登录密码" datatype="*" nullmsg="请输入登录密码!" errormsg="请输入正确的登录密码!">
+                                <input type="hidden" name="id" id="api-id" class="form-control">
+                                <input type="hidden" name="project" id="project" class="form-control" value="{{ $project->id }}">
+                                <input type="password" name='password' class="form-control" placeholder="重要操作，请输入登录密码" id="pwd">
                             </div>
 
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="button" class="btn btn-danger js_submit">删除</button>
+                            <button type="button" class="btn btn-danger delete">删除</button>
                         </div>
                     </div><!-- /.modal-content -->
                 </form>
@@ -289,6 +290,33 @@
             // 吐司提示
             $('[data-toggle="tooltip"]').tooltip();
 
+        });
+
+        $('.delete').click(function(){
+            if(!$('#api-id').val()){
+                return layer.msg('接口不存在',{icon:0,time:2000});
+            }
+
+            if(!$('#project').val()){
+                return layer.msg('项目不存在',{icon:0,time:2000});
+            }
+            if(!$('#pwd').val()){
+                return layer.msg('请输入密码',{icon:0,time:2000});
+            }
+            var data = $('#js_deleteApiForm').serialize();
+            $.ajax({
+                type:'GET',
+                dataType:'json',
+                url:'{{ route('web.project.api.delete') }}',
+                data:data,
+                success:function(date){
+                    if(date.status){
+                        location.href = '{{ route('web.project.api.home',['id' => $project->id]) }}';
+                    }else{
+                        layer.msg(date.msg,{icon:2,time:2000});
+                    }
+                }
+            })
         });
 
         // 删除接口

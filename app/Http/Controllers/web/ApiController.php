@@ -89,7 +89,7 @@ class ApiController extends Controller
 		$ProjectGroup = new ProjectGroup();
 		$group = $this->projectGroup($param['project']);
 		if(!$group['is_update']){
-			return returnCode(0,'无限制操作此项');
+			return returnCode(0,'无权限操作此项');
 		}
 
 		$user = $this->getUsers($param['name']);
@@ -125,7 +125,7 @@ class ApiController extends Controller
 
 		$group = $this->projectGroup($param['project']);
 		if(!$group['is_update']){
-			return returnCode(0,'无限制操作此项');
+			return returnCode(0,'无权限操作此项');
 		}
 
 		if(!$param['id']){
@@ -158,7 +158,7 @@ class ApiController extends Controller
 
 		$group = $this->projectGroup($param['project']);
 		if(!$group['is_del']){
-			return returnCode(0,'无限制操作此项');
+			return returnCode(0,'无权限操作此项');
 		}
 
 		DB::beginTransaction();
@@ -185,7 +185,7 @@ class ApiController extends Controller
 
 		$group = $this->projectGroup($param['project']);
 		if(!$group['is_update']){
-			return returnCode(0,'无限制操作此项');
+			return returnCode(0,'无权限操作此项');
 		}
 
 		if(!$param['project']){
@@ -236,7 +236,7 @@ class ApiController extends Controller
 
 		$group = $this->projectGroup($param['project']);
 		if(!$group['is_update']){
-			return returnCode(0,'无限制操作此项');
+			return returnCode(0,'无权限操作此项');
 		}
 
 		$ProjectModel = new ProjectModel();
@@ -270,7 +270,7 @@ class ApiController extends Controller
 		}
 		$group = $this->projectGroup($param['project']);
 		if(!$group['is_del']){
-			return returnCode(0,'无限制操作此项');
+			return returnCode(0,'无权限操作此项');
 		}
 		$ProjectModel = new ProjectModel();
 		$ProjectApi = new ProjectApi();
@@ -317,7 +317,7 @@ class ApiController extends Controller
 
 		$group = $this->projectGroup($param['project_id']);
 		if(!$group['is_update']){
-			return returnCode(0,'无限制操作此项');
+			return returnCode(0,'无权限操作此项');
 		}
 
 		$ProjectApi = new ProjectApi();
@@ -347,6 +347,74 @@ class ApiController extends Controller
 		$ProjectApi = new ProjectApi();
 		$api = $ProjectApi->find($id);
 		return view('web.api.detail',['api' => $api]);
+	}
+
+	/**
+	 * 删除api
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/20 16:14
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function deleteApi(Request $request)
+	{
+		$param = $request->all();
+		$group = $this->projectGroup($param['project']);
+		if(!$group['is_del']){
+			return returnCode(0,'无权限操作此项');
+		}
+		if(!password_verify($param['password'],session('user')->password)){
+			return returnCode(0,'密码错误');
+		}
+		$ProjectApi = new ProjectApi();
+		DB::beginTransaction();
+		try{
+			$ProjectApi->delApi($param['id']);
+			DB::commit();
+			return returnCode(1,'删除成功');
+		}catch(\Exception $e){
+			DB::rollBack();
+			return returnCode(0,'删除失败,请稍后再试');
+		}
+	}
+
+	/**
+	 * 修改接口数据页面
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/20 16:01
+	 * @param Request $request
+	 * @param $id
+	 * @param $project
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|\think\response\View
+	 */
+	public function editApi(Request $request,$id,$project)
+	{
+		$this->returnCommon($project);
+		$ProjectModel = new ProjectModel();
+		$model = $ProjectModel->getModelList($project);
+		return view('web.api.edit',['api_id' => $id,'model' => $model]);
+	}
+
+	/**
+	 * 获取api接口详情
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/20 17:01
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function getDetail(Request $request)
+	{
+		$param = $request->all();
+		$ProjectApi = new ProjectApi();
+		$api = $ProjectApi->getDetail($param['api'],$param['project']);
+		if($api){
+			$api->header = $api->header ? unserialize($api->header) : [];
+			$api->param = $api->param ? unserialize($api->param) : [];
+			$api->response = $api->response ? unserialize($api->response) : [];
+			return returnCode(1,'',$api);
+		}else{
+			return returnCode(0,'项目不存在');
+		}
 	}
 
 }

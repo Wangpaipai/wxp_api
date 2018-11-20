@@ -41,4 +41,32 @@ class ProjectApi extends Model
 	{
 		return $this->where('model_id',$model)->delete();
 	}
+
+	/**
+	 * 删除api
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/20 16:13
+	 * @param $api
+	 * @return mixed
+	 */
+	public function delApi($api)
+	{
+		return $this->where('id',$api)->delete();
+	}
+
+	/**
+	 * 获取接口详情
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/20 16:58
+	 * @param $api
+	 * @param $project
+	 * @return mixed
+	 */
+	public function getDetail($api,$project)
+	{
+		$field = [
+			'id','project_id','model_id','title','method','brief','url','header','param','response','case',
+		];
+		return $this->where('id',$api)->where('project_id',$project)->first($field);
+	}
 }

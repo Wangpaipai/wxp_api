@@ -89,4 +89,19 @@ class ProjectModel extends Model
 	{
 		return $this->where('id',$data['id'])->where('project_id',$data['project'])->delete();
 	}
+
+	/**
+	 * 获取接口模块列表
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/20 16:28
+	 * @param $project_id
+	 * @return mixed
+	 */
+	public function getModelList($project_id)
+	{
+		$field = [
+			'id','name'
+		];
+		return $this->where('project_id',$project_id)->get($field);
+	}
 }
