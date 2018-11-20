@@ -313,12 +313,12 @@
                         if(type == 2){
                             var project = this.group;
                             if(project[index].is_show){
-                                location.href = '/project/api/' + data;
+                                location.href = '/project/api/index/' + data;
                             }else{
                                 layer.msg('无权限查看此项目',{icon:0,time:2000});
                             }
                         }else{
-                            location.href = '/project/api/' + data;
+                            location.href = '/project/api/index/' + data;
                         }
                     },
                     projectOut:function(data,index){
@@ -404,7 +404,7 @@
                             }
                         })
                         .catch(function (error) {
-                            console.log('error');
+                            console.log(error);
                         });
 
                     },

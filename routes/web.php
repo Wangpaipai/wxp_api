@@ -42,12 +42,15 @@ Route::group(['middleware' => 'loginTrue'], function () {
 		$route->get('/apply/out','ProjectController@applyOut')->name('web.project.apply.out');
 
 		Route::prefix('api')->group(function($route){
-			$route->get('/{id}','ApiController@index')->name('web.project.api.home');
+			$route->get('/index/{id}','ApiController@index')->name('web.project.api.home');
 			$route->get('/group/{id}','ApiController@group')->name('web.project.api.group');
 			$route->get('/member/group','ApiController@getGroup')->name('web.project.api.groupList');
 			$route->get('/create/group','ApiController@createGroup')->name('web.project.api.group.create');
 			$route->get('/update/group','ApiController@updateGroup')->name('web.project.api.group.update');
 			$route->get('/remove/group','ApiController@removeGroup')->name('web.project.api.group.remove');
+			$route->post('/create','ApiController@createApi')->name('web.project.api.create');
+			$route->get('/detail/{id}/{project}','ApiController@detailApi')->name('web.project.api.detail');
+			$route->get('/edit/{id}/{project}','ApiController@editApi')->name('web.project.api.edit');
 		});
 
 		Route::prefix('model')->group(function($route){

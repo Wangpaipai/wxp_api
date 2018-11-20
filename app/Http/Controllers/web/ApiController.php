@@ -304,4 +304,49 @@ class ApiController extends Controller
 		return returnCode(1,'',$menu);
 	}
 
+	/**
+	 * 添加接口
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/20 13:41
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function createApi(Request $request)
+	{
+		$param = $request->all();
+
+		$group = $this->projectGroup($param['project_id']);
+		if(!$group['is_update']){
+			return returnCode(0,'无限制操作此项');
+		}
+
+		$ProjectApi = new ProjectApi();
+		unset($param['index']);
+		unset($param['model_name']);
+		$param['uid'] = session('user')->id;
+		$result = $ProjectApi->create($param);
+		if($result){
+			return returnCode(1,'添加成功',$result);
+		}else{
+			return returnCode(0,'添加失败，请稍后再试');
+		}
+	}
+
+	/**
+	 * api详情页
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/20 14:38
+	 * @param Request $request
+	 * @param $id
+	 * @param $project
+	 * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|\think\response\View
+	 */
+	public function detailApi(Request $request,$id,$project)
+	{
+		$this->returnCommon($project);
+		$ProjectApi = new ProjectApi();
+		$api = $ProjectApi->find($id);
+		return view('web.api.detail',['api' => $api]);
+	}
+
 }

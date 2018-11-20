@@ -6,7 +6,7 @@
                     <a href="{{ route('web.project.api.home',['id' => $project->id]) }}"><i class="fa fa-home fa-fw"></i> 项目主页</a>
                 </li>
 
-                <li class="module-item js_moduleItem" v-for="(item,index) in menu" :data-id="item.id">
+                <li class="module-item js_moduleItem" v-for="(item,index) in menu" :data-id="item.id" :class="[model_id == item.id ? 'active' : '']">
                     <a href="javascript:void(0);"><i class="fa fa-fw fa-folder-open"></i>
                         @{{ item.name }}
 
@@ -15,9 +15,10 @@
                         <span v-if="group.is_update" class="fa hidden-xs fa-fw fa-plus js_addApiBtn hidden" @click="apiCreate(item.id,index)" title="添加接口"></span>
                         <span v-if="group.is_update" @click="editModel(index)" class="fa hidden-xs fa-fw fa-pencil  js_addModuleBtn hidden" :data-id="item.id" title="编辑模块"></span>
                     </a>
-                    <ul class="nav nav-second-level collapse" :id="'api-menu-' + item.id">
-                        <li class="api-item js_apiItem" v-for="value in item.api" :data-id="value.api_id">
-                            <a href="" title="点击查看接口详情">
+                    {{--<ul class="nav nav-second-level" :id="'api-menu-' + item.id" style="display: none">--}}
+                    <ul class="nav nav-second-level" :id="'api-menu-' + item.id" :style="{display: model_id == item.id ? 'block' : 'none'}">
+                        <li class="api-item js_apiItem" v-for="value in item.api" @click="apiDetail(value.api_id)" :data-id="value.api_id">
+                            <a href="javascript:;" title="点击查看接口详情">
                                 <i class="fa fa-fw fa-files-o"></i>@{{ value.title }}
                                 <i class="fa fa-fw fa-eye pull-right"></i>
                             </a>
@@ -77,7 +78,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" @click="createApiShow = !createApiShow" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary">提交</button>
+                    <button type="button" class="btn btn-primary" @click="addApi">提交</button>
                 </div>
 
             </div>
@@ -163,8 +164,12 @@
                 menu:[],
                 group:{},
                 createApiShow:false,
-                apiCreateData:{},
-                delShow:false
+                apiCreateData:{
+                    method:'POST'
+                },
+                delShow:false,
+                createApiUrl:'{{ route('web.project.api.create') }}',
+                model_id:'{{ isset($api) ? $api->model_id : '' }}'
             },
             created:function(){
                 var that = this;
@@ -172,9 +177,48 @@
                 getMenu(that);
             },
             methods:{
+                apiDetail:function(api){
+                    location.href = '/project/api/detail/' + api + '/' + this.project;
+                },
+                addApi:function(event){
+                    var that = this;
+                    var param = that.apiCreateData;
+                    param.project_id = that.project;
+                    if(!param.model_id){
+                        return layer.msg('所属模块不存在',{icon:0,time:2000});
+                    }
+                    if(!param.title){
+                        return layer.msg('接口名称不能为空',{icon:0,time:2000});
+                    }
+                    if(!param.url){
+                        return layer.msg('请求地址不能为空',{icon:0,time:2000});
+                    }
+                    if(!param.method){
+                        return layer.msg('请选择请求方式',{icon:0,time:2000});
+                    }
+                    axios.post(that.createApiUrl,param)
+                    .then(function (response) {
+                        var data = response.data;
+                        if(data.status){
+                            var api = {
+                                api_id:data.data.id,
+                                title:data.data.title
+                            };
+                            that.menu[param.index].api.push(api);
+                            that.createApiShow = false;
+                            layer.msg(data.msg,{icon:1,time:2000});
+                        }else{
+                            layer.msg(data.msg,{icon:2,time:2000});
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                },
                 apiCreate:function(modelId,index){
                     this.apiCreateData.model_id = modelId;
                     this.apiCreateData.index = index;
+                    this.apiCreateData.model_name = this.menu[index].name;
                     this.createApiShow = true;
                 },
                 removeSet:function(model,index){
@@ -233,9 +277,6 @@
                             }else{
                                 that.menu[that.modelIndex].name = that.model.name;
                             }
-//                            setTimeout(function(){
-//                                location.reload();
-//                            },1000)
                         }else{
                             layer.msg(data.msg,{icon:2,time:2000});
                         }
@@ -285,7 +326,33 @@
             event.stopPropagation();
             $(this).find('span').addClass('hidden');
             $(this).find('.fa-eye').addClass('hidden');
-
         });
+
+        $("#appModel").on('click','.js_moduleItem',function(event){
+            event.stopPropagation();
+            if($(this).hasClass('active')){
+                $(this).children('ul').fadeOut();
+                $(this).removeClass('active');
+            }else{
+                $(this).children('ul').fadeIn();
+                $(this).addClass('active');
+            }
+        })
+        $("#appModel").on('click','.js_deleteModuleBtn ',function(event){
+            event.stopPropagation();
+            return false;
+        })
+        $("#appModel").on('click','.js_addApiBtn ',function(event){
+            event.stopPropagation();
+            return false;
+        })
+        $("#appModel").on('click','.js_addModuleBtn ',function(event){
+            event.stopPropagation();
+            return false;
+        })
+        $("#appModel").on('click','.js_apiItem ',function(event){
+            event.stopPropagation();
+            return false;
+        })
     </script>
 @endsection
