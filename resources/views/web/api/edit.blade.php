@@ -149,6 +149,7 @@
                                                     <input class="form-control" v-model="item.remark"/>
                                                 </td>
                                                 <td>
+                                                    <a href="javascript:void(0);" @click="createNextHeader(index)" class="fa fa-plus  btn btn-sm btn-default"></a>
                                                     <a href="javascript:void(0);" @click="removeHeader(index)" class="fa fa-trash-o btn btn-sm btn-default"></a>
                                                 </td>
                                             </tr>
@@ -226,6 +227,7 @@
                                                     <input class="form-control" v-model="item.remark"/>
                                                 </td>
                                                 <td>
+                                                    <a href="javascript:void(0);" @click="createNextParam(index)" class="fa fa-plus  btn btn-sm btn-default"></a>
                                                     <a href="javascript:void(0);" @click="removeParam(index)" class="fa fa-trash-o btn btn-sm btn-default"></a>
                                                 </td>
                                             </tr>
@@ -291,6 +293,7 @@
                                                     <input class="form-control" v-model="item.remark"/>
                                                 </td>
                                                 <td>
+                                                    <a href="javascript:void(0);" @click="createNextResponse(index)" class="fa fa-plus  btn btn-sm btn-default"></a>
                                                     <a href="javascript:void(0);" @click="removeResponse(index)" class="fa fa-trash-o btn btn-sm btn-default"></a>
                                                 </td>
                                             </tr>
@@ -429,6 +432,15 @@
                 },
                 removeHeader:function(index){
                     this.api.header.splice(index,1);
+                },
+                createNextHeader:function(index){
+                    this.api.header.splice(index,0,{});
+                },
+                createNextParam:function(index){
+                    this.api.param.splice(index,0,{});
+                },
+                createNextResponse:function(index){
+                    this.api.response.splice(index,0,{});
                 },
                 addHeader:function(event){
                     this.api.header.push({});
