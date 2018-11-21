@@ -72,7 +72,7 @@
                                 <a href="javascript:void(0);" class="drag-sort fa hidden-xs fa-navicon js_dragProjectBtn" title='' :data-id="item.id"></a>
                                 @{{ item.name }}
                             </span>
-                            <span class="head-btn">
+                            <span class="head-btn" @click.stop>
                                 <a data-type="1" class="fa hidden-xs fa-pencil js_addProjectBtn" @click="objectUpdate" data-title='编辑项目' :data-id="item.id"></a>
                                 <a data-type="1" class="fa hidden-xs fa-trash-o js_deleteProjectBtn" @click="objectRemove" data-title='删除项目' :data-id="item.id" :data-index="index"></a>
                                 <a data-type="1" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive" data-title='转让项目' :data-id="item.id"></a>
@@ -115,12 +115,12 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         @{{ item.name }}
-                        <span class="head-btn">
-                        <a data-type="2" v-if="item.is_update" class="fa hidden-xs fa-pencil js_addProjectBtn" @click="objectUpdate" title='编辑项目' :data-id="item.id"></a>
-                        <a data-type="2" v-if="item.is_del" class="fa hidden-xs fa-trash-o js_deleteProjectBtn" @click="objectRemove" title='删除项目' :data-id="item.id" :data-index="index"></a>
-                        <a data-type="2" v-if="item.is_give" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive" title='转让项目' :data-id="item.id"></a>
-                        <a class="fa hidden-xs fa-sign-out js_quitProject" @click="projectOut(item.id,index)" data-toggle="tooltip" title="退出项目" :data-id="item.id"></a>
-                    </span>
+                        <span class="head-btn" @click.stop>
+                            <a data-type="2" v-if="item.is_update" class="fa hidden-xs fa-pencil js_addProjectBtn" @click="objectUpdate" title='编辑项目' :data-id="item.id"></a>
+                            <a data-type="2" v-if="item.is_del" class="fa hidden-xs fa-trash-o js_deleteProjectBtn" @click="objectRemove" title='删除项目' :data-id="item.id" :data-index="index"></a>
+                            <a data-type="2" v-if="item.is_give" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive" title='转让项目' :data-id="item.id"></a>
+                            <a class="fa hidden-xs fa-sign-out js_quitProject" @click="projectOut(item.id,index)" data-toggle="tooltip" title="退出项目" :data-id="item.id"></a>
+                        </span>
                     </div>
                     <div class="panel-body">
                         <p>@{{ item.brief }}</p>
