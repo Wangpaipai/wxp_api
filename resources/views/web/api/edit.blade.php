@@ -434,13 +434,13 @@
                     this.api.header.splice(index,1);
                 },
                 createNextHeader:function(index){
-                    this.api.header.splice(index,0,{});
+                    this.api.header.splice(index+1,0,{});
                 },
                 createNextParam:function(index){
-                    this.api.param.splice(index,0,{});
+                    this.api.param.splice(index+1,0,{});
                 },
                 createNextResponse:function(index){
-                    this.api.response.splice(index,0,{});
+                    this.api.response.splice(index+1,0,{});
                 },
                 addHeader:function(event){
                     this.api.header.push({});
