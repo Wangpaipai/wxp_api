@@ -21,7 +21,7 @@
                         <li class="api-item js_apiItem" v-for="value in item.api" @click="apiDetail(value.api_id)" :data-id="value.api_id">
                             <a href="javascript:;" :class="[api_id == value.api_id ? 'active' : '']" title="点击查看接口详情">
                                 <i class="fa fa-fw fa-files-o"></i>@{{ value.title }}
-                                <i class="fa fa-fw fa-eye pull-right"></i>
+                                <i class="fa fa-fw fa-eye pull-right hidden"></i>
                             </a>
                         </li>
                     </ul>
