@@ -6,7 +6,8 @@
                     <a href="{{ route('web.project.api.home',['id' => $project->id]) }}"><i class="fa fa-home fa-fw"></i> 项目主页</a>
                 </li>
 
-                <li class="module-item js_moduleItem" v-for="(item,index) in menu" :data-id="item.id" :class="[model_id == item.id ? 'active' : '']">
+                {{--<li class="module-item js_moduleItem" v-for="(item,index) in menu" :data-id="item.id" :class="[model_id == item.id ? 'active' : '']">--}}
+                <li class="module-item js_moduleItem active" v-for="(item,index) in menu" :data-id="item.id">
                     <a href="javascript:void(0);"><i class="fa fa-fw fa-folder-open"></i>
                         @{{ item.name }}
 
@@ -15,8 +16,8 @@
                         <span v-if="group.is_update" class="fa hidden-xs fa-fw fa-plus js_addApiBtn hidden" @click="apiCreate(item.id,index)" title="添加接口"></span>
                         <span v-if="group.is_update" @click="editModel(index)" class="fa hidden-xs fa-fw fa-pencil  js_addModuleBtn hidden" :data-id="item.id" title="编辑模块"></span>
                     </a>
-                    {{--<ul class="nav nav-second-level" :id="'api-menu-' + item.id" style="display: none">--}}
-                    <ul class="nav nav-second-level" :id="'api-menu-' + item.id" :style="{display: model_id == item.id ? 'block' : 'none'}">
+                    <ul class="nav nav-second-level" :id="'api-menu-' + item.id" style="display: block">
+                    {{--<ul class="nav nav-second-level" :id="'api-menu-' + item.id" :style="{display: model_id == item.id ? 'block' : 'none'}">--}}
                         <li class="api-item js_apiItem" v-for="value in item.api" @click="apiDetail(value.api_id)" :data-id="value.api_id">
                             <a href="javascript:;" :class="[api_id == value.api_id ? 'active' : '']" title="点击查看接口详情">
                                 <i class="fa fa-fw fa-files-o"></i>@{{ value.title }}
