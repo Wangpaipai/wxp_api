@@ -48,6 +48,7 @@ class ProjectModel extends Model
 			->whereNull('t.deleted_at')
 			->select($field)
 			->orderBy('project_model.created_at')
+			->orderBy('project_api.created_at')
 			->get();
 	}
 
