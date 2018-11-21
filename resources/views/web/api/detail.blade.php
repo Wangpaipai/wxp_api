@@ -119,9 +119,9 @@
                                     @if($api->header)
                                         @foreach(unserialize($api->header) as $value)
                                         <tr>
-                                            <td>{{ $value['key'] }}</td>
-                                            <td>{{ $value['value'] }}</td>
-                                            <td>{{ $value['remark'] }}</td>
+                                            <td>{{ $value['key'] ?? '' }}</td>
+                                            <td>{{ $value['value'] ?? '' }}</td>
+                                            <td>{{ $value['remark'] ?? '' }}</td>
                                         </tr>
                                         @endforeach
                                     @endif
@@ -161,12 +161,12 @@
                                     @if($api->param)
                                         @foreach(unserialize($api->param) as $value)
                                         <tr>
-                                            <td>{{ $value['name'] }}</td>
-                                            <td>{{ $value['brief'] }}</td>
-                                            <td>{{ $value['type'] }}</td>
-                                            <td>{{ $value['must'] }}</td>
-                                            <td>{{ $value['default'] }}</td>
-                                            <td>{{ $value['remark'] }}</td>
+                                            <td>{{ $value['name'] ?? '' }}</td>
+                                            <td>{{ $value['brief'] ?? '' }}</td>
+                                            <td>{{ $value['type'] ?? '' }}</td>
+                                            <td>{{ $value['must'] ?? '' }}</td>
+                                            <td>{{ $value['default'] ?? '' }}</td>
+                                            <td>{{ $value['remark'] ?? '' }}</td>
                                         </tr>
                                         @endforeach
                                     @endif
@@ -205,9 +205,9 @@
                                         @foreach(unserialize($api->response) as $value)
                                             <tr>
                                                 <td style="text-align: left;padding-left: 50px;">{{ $value['name'] }}</td>
-                                                <td>{{ $value['brief'] }}</td>
-                                                <td>{{ $value['type'] }}</td>
-                                                <td>{{ $value['remark'] }}</td>
+                                                <td>{{ $value['brief'] ?? '' }}</td>
+                                                <td>{{ $value['type'] ?? '' }}</td>
+                                                <td>{{ $value['remark'] ?? '' }}</td>
                                             </tr>
                                         @endforeach
                                     @endif

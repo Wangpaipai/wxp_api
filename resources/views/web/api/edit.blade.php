@@ -34,7 +34,7 @@
                         <div class="page-header">
                             <h1>接口编辑</h1>
                             <div class="opt-btn">
-                                <a class="btn btn-sm btn-success js_submit" href="javascript:void(0);"><i class="fa fa-fw fa-save"></i>保存</a>
+                                <a class="btn btn-sm btn-success js_submit" @click="updateApi" href="javascript:void(0);"><i class="fa fa-fw fa-save"></i>保存</a>
                                 <a class="btn btn-sm btn-warning" href="{{ route('web.project.api.detail',['id' => $api_id,'project' => $project->id]) }}"><i class="fa fa-fw fa-reply"></i>取消</a>
                             </div>
                         </div>
@@ -134,10 +134,11 @@
                                                 <th>字段键</th>
                                                 <th>字段值</th>
                                                 <th>备注说明</th>
+                                                <th>操作</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="item in api.header">
+                                            <tr v-for="(item,index) in api.header">
                                                 <td>
                                                     <input class="form-control" v-model="item.key"/>
                                                 </td>
@@ -146,6 +147,9 @@
                                                 </td>
                                                 <td>
                                                     <input class="form-control" v-model="item.remark"/>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" @click="removeHeader(index)" class="fa fa-trash-o btn btn-sm btn-default"></a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -186,10 +190,11 @@
                                                 <th style="width: 10%">是否必填</th>
                                                 <th>默认值</th>
                                                 <th>备注说明</th>
+                                                <th>操作</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="item in api.param">
+                                            <tr v-for="(item,index) in api.param">
                                                 <td>
                                                     <input class="form-control" v-model="item.name"/>
                                                 </td>
@@ -219,6 +224,9 @@
                                                 </td>
                                                 <td>
                                                     <input class="form-control" v-model="item.remark"/>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" @click="removeParam(index)" class="fa fa-trash-o btn btn-sm btn-default"></a>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -256,6 +264,7 @@
                                                 <th>字段含义</th>
                                                 <th>字段类型</th>
                                                 <th>备注说明</th>
+                                                <th>操作</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -280,6 +289,9 @@
                                                 </td>
                                                 <td>
                                                     <input class="form-control" v-model="item.remark"/>
+                                                </td>
+                                                <td>
+                                                    <a href="javascript:void(0);" @click="removeResponse(index)" class="fa fa-trash-o btn btn-sm btn-default"></a>
                                                 </td>
                                             </tr>
 
@@ -312,6 +324,18 @@
                         </div>
                         <!-- /.panel -->
                     </div>
+
+
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="page-header">
+                                <div class="opt-btn">
+                                    <a class="btn btn-sm btn-success js_submit" @click="updateApi" href="javascript:void(0);"><i class="fa fa-fw fa-save"></i>保存</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.col-lg-12 -->
+                    </div>
                     <!-- /.col-lg-6 -->
                 </div>
 
@@ -323,13 +347,35 @@
 
 @section('js')
     <script>
+        function arrayNullCheck(arr){
+            for(item in arr.header){
+                if(JSON.stringify(arr.header[item]) === '{}'){
+                    layer.msg('Header参数不能为空',{icon:0,time:2000});
+                    return false;
+                }
+            }
+            for(item in arr.param){
+                if(JSON.stringify(arr.param[item]) === '{}'){
+                    layer.msg('请求参数不能为空',{icon:0,time:2000});
+                    return false;
+                }
+            }
+            for(item in arr.response){
+                if(JSON.stringify(arr.response[item]) === '{}'){
+                    layer.msg('响应参数不能为空',{icon:0,time:2000});
+                    return false;
+                }
+            }
+            return true;
+        }
         var app = new Vue({
             el:'#wrapper',
             data:{
                 project:'{{ $project->id }}',
                 api_id:'{{ $api_id }}',
                 api:{},
-                getApiUrl:'{{ route('web.project.api.getDetail') }}'
+                getApiUrl:'{{ route('web.project.api.getDetail') }}',
+                updateUrl:'{{ route('web.project.api.update') }}'
             },
             created:function(){
                 var that = this;
@@ -352,6 +398,38 @@
                 });
             },
             methods:{
+                updateApi:function(event){
+                    var that = this;
+                    var api = that.api;
+                    var check = arrayNullCheck(api);
+                    if(!check){
+                        return false;
+                    }
+                    axios.post(that.updateUrl,api)
+                    .then(function (response) {
+                        var data = response.data;
+                        if(data.status){
+                            layer.msg(data.msg,{icon:1,time:2000});
+                            setTimeout(function(){
+                                location.href = '{{ route('web.project.api.detail',['id' => $api_id,'project' => $project->id]) }}';
+                            },1000)
+                        }else{
+                            layer.msg(data.msg,{icon:2,time:2000});
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                },
+                removeResponse:function(index){
+                    this.api.response.splice(index,1);
+                },
+                removeParam:function(index){
+                    this.api.param.splice(index,1);
+                },
+                removeHeader:function(index){
+                    this.api.header.splice(index,1);
+                },
                 addHeader:function(event){
                     this.api.header.push({});
                 },

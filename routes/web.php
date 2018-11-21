@@ -53,6 +53,7 @@ Route::group(['middleware' => 'loginTrue'], function () {
 			$route->get('/delete','ApiController@deleteApi')->name('web.project.api.delete');
 			$route->get('/edit/{id}/{project}','ApiController@editApi')->name('web.project.api.edit');
 			$route->get('/getDetail','ApiController@getDetail')->name('web.project.api.getDetail');
+			$route->post('/update','ApiController@updateApi')->name('web.project.api.update');
 		});
 
 		Route::prefix('model')->group(function($route){

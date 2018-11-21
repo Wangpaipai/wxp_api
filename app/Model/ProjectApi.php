@@ -69,4 +69,16 @@ class ProjectApi extends Model
 		];
 		return $this->where('id',$api)->where('project_id',$project)->first($field);
 	}
+
+	/**
+	 * 更新接口数据
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/21 10:28
+	 * @param array $api
+	 * @return mixed
+	 */
+	public function updateApi(array $api)
+	{
+		return $this->where('id',$api['id'])->where('project_id',$api['project_id'])->update($api);
+	}
 }

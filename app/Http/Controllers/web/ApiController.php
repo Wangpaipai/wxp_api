@@ -417,4 +417,34 @@ class ApiController extends Controller
 		}
 	}
 
+	/**
+	 * 更新api接口数据
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/21 10:29
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function updateApi(Request $request)
+	{
+		$param = $request->all();
+		$group = $this->projectGroup($param['project_id']);
+		if(!$group['is_update']){
+			return returnCode(0,'无权限操作此项');
+		}
+
+		$ProjectApi = new ProjectApi();
+		$param['header'] = $param['header'] ? serialize($param['header']) : '';
+		$param['param'] = $param['param'] ? serialize($param['param']) : '';
+		$param['response'] = $param['response'] ? serialize($param['response']) : '';
+		DB::beginTransaction();
+		try{
+			$ProjectApi->updateApi($param);
+			DB::commit();
+			return returnCode(1,'更新成功');
+		}catch(\Exception $e){
+			DB::rollBack();
+			return returnCode(0,'更新失败,请稍后再试');
+		}
+	}
+
 }
