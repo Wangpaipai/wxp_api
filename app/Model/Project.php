@@ -110,4 +110,16 @@ class Project extends Model
 			->select($field)
 			->first();
 	}
+
+	/**
+	 * 转让项目
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/21 15:47
+	 * @param $data
+	 * @return mixed
+	 */
+	public function projectGive($data)
+	{
+		return $this->where('id',$data['project_id'])->update(['uid' => $data['uid']]);
+	}
 }

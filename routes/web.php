@@ -40,6 +40,8 @@ Route::group(['middleware' => 'loginTrue'], function () {
 		$route->get('/apply/getlist','ProjectController@getApplyList')->name('web.project.apply.getlist');
 		$route->get('/apply/update','ProjectController@applyUpdate')->name('web.project.apply.update');
 		$route->get('/apply/out','ProjectController@applyOut')->name('web.project.apply.out');
+		$route->get('/give','ProjectController@giveProject')->name('web.project.give');
+		$route->get('/member/list','ProjectController@memberList')->name('web.project.memberList');
 
 		Route::prefix('api')->group(function($route){
 			$route->get('/index/{id}','ApiController@index')->name('web.project.api.home');

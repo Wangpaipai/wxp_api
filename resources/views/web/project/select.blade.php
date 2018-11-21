@@ -81,7 +81,7 @@
                             <span class="head-btn" @click.stop>
                                 <a href="javascript:void(0);" data-type="1" class="fa hidden-xs fa-pencil js_addProjectBtn" @click="objectUpdate" data-title='编辑项目' :data-id="item.id"></a>
                                 <a href="javascript:void(0);" data-type="1" class="fa hidden-xs fa-trash-o js_deleteProjectBtn" @click="objectRemove" data-title='删除项目' :data-id="item.id" :data-index="index"></a>
-                                <a href="javascript:void(0);" data-type="1" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive" data-title='转让项目' :data-id="item.id"></a>
+                                <a href="javascript:void(0);" data-type="1" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive(index,1)" data-title='转让项目' :data-id="item.id"></a>
                             </span>
                             </div>
                             <div class="panel-body">
@@ -124,7 +124,7 @@
                         <span class="head-btn" @click.stop>
                             <a data-type="2" v-if="item.is_update" class="fa hidden-xs fa-pencil js_addProjectBtn" @click="objectUpdate" title='编辑项目' :data-id="item.id"></a>
                             <a data-type="2" v-if="item.is_del" class="fa hidden-xs fa-trash-o js_deleteProjectBtn" @click="objectRemove" title='删除项目' :data-id="item.id" :data-index="index"></a>
-                            <a data-type="2" v-if="item.is_give" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive" title='转让项目' :data-id="item.id"></a>
+                            <a data-type="2" v-if="item.is_give" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive(index,2)" title='转让项目' :data-id="item.id"></a>
                             <a class="fa hidden-xs fa-sign-out js_quitProject" @click="projectOut(item.id,index)" data-toggle="tooltip" title="退出项目" :data-id="item.id"></a>
                         </span>
                     </div>
@@ -219,22 +219,25 @@
     </div>
 
     <!-- 转让项目模态框 -->
-    <div class="modal fade" id="js_transferProjectModal" tabindex="-9" role="dialog">
+    <div class="modal fade" id="js_transferProjectModal" v-show="giveShow" :class="{in:giveShow}" tabindex="2" role="dialog" style="display: block">
+        <div class="modal-backdrop fade in" v-show="giveShow" :style="{height:windowHeight + 'px'}"></div>
         <div class="modal-dialog" role="document">
 
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span @click="giveShow = !giveShow" aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">转让项目</h4>
                 </div>
                 <div class="modal-body">
 
-                    <iframe id="js_transferProjectIframe" src=""></iframe>
+                    <div id="js_addProjectIframe" style="min-height: 380px;">
+                        @include('web.project.transfer')
+                    </div>
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary js_submit">提交</button>
+                    <button type="button" @click="giveShow = !giveShow" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    <button type="button" @click="giveProject" class="btn btn-primary js_submit">提交</button>
                 </div>
 
             </div>
@@ -308,13 +311,75 @@
                     },
                     removeUrl:'{{ route('web.project.remove') }}',
                     type:1,
-                    projectOutUrl:'{{ route('web.project.apply.out') }}'
+                    projectOutUrl:'{{ route('web.project.apply.out') }}',
+                    member:[],
+                    giveShow:false,
+                    give:{},
+                    memberListUrl:'{{ route('web.project.memberList') }}',
+                    giveUrl:'{{ route('web.project.give') }}'
                 },
                 created: function () {
                     var that = this;
                     created(that);
                 },
                 methods:{
+                    giveProject:function(event){
+                        var that = this;
+                        if(!that.give.password){
+                            return layer.msg('请输入密码',{icon:2,time:2000});
+                        }
+                        if(!that.give.uid){
+                            return layer.msg('请选择转让用户',{icon:2,time:2000});
+                        }
+                        axios.get(that.giveUrl,{
+                            params:{
+                                project_id:that.give.project_id,
+                                uid:that.give.uid,
+                                password:that.give.password
+                            }
+                        })
+                        .then(function (response) {
+                            var data = response.data;
+                            if(data.status){
+                                created(that);
+                                that.giveShow = false;
+                                layer.msg(data.msg,{icon:1,time:2000});
+                            }else{
+                                layer.msg(data.msg,{icon:2,time:2000});
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    },
+                    objectGive:function(index,type){
+                        var that = this;
+                        if(type == 1){
+                            var project = that.project[index];
+                        }else{
+                            var project = that.group[index];
+                        }
+                        axios.get(that.memberListUrl,{
+                            params:{
+                                project_id:project.id
+                            }
+                        })
+                        .then(function (response) {
+                            var data = response.data;
+                            if(data.status){
+                                that.giveShow = true;
+                                that.member = data.data;
+                                that.give.name = project.name;
+                                that.give.project_id = project.id;
+                                that.give.uid = 0;
+                            }else{
+                                layer.msg(data.msg,{icon:2,time:2000});
+                            }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    },
                     locationProject:function(data,index,type){
                         if(type == 2){
                             var project = this.group;
@@ -381,9 +446,6 @@
                         .catch(function (error) {
                             console.log('error');
                         });
-                    },
-                    objectGive:function(event){
-                        this.type = event.srcElement.dataset.type;
                     },
                     objectRemove:function(event){
                         this.type = event.srcElement.dataset.type;

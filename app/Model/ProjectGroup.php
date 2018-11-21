@@ -202,4 +202,23 @@ class ProjectGroup extends Model
 	{
 		return $this->where('id',$group_id)->delete();
 	}
+
+	/**
+	 * 获取项目下所有成员
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/21 15:28
+	 * @param $project_id
+	 * @return mixed
+	 */
+	public function getGroupList($project_id)
+	{
+		$field = [
+			't.id','t.name'
+		];
+		return $this
+			->leftJoin('users as t','t.id','=','project_group.uid')
+			->where('project_id',$project_id)
+			->select($field)
+			->get();
+	}
 }

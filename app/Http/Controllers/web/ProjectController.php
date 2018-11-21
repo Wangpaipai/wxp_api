@@ -16,9 +16,11 @@ use App\Model\ProjectGroup;
 use App\Model\ProjectModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\web\traits\ProjectAction;
 
 class ProjectController extends Controller
 {
+	use ProjectAction;
 	/**
 	 * 添加项目
 	 * Created by：Mp_Lxj
@@ -334,6 +336,65 @@ class ProjectController extends Controller
 			return returnCode(1,'退出成功');
 		}else{
 			return returnCode(0,'退出失败,请稍后再试');
+		}
+	}
+
+	/**
+	 * 获取项目成员列表
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/21 15:30
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function memberList(Request $request)
+	{
+		$param = $request->all();
+
+		$group = $this->projectGroup($param['project_id']);
+		if(!$group['is_give']){
+			return returnCode(0,'无权限操作此项');
+		}
+
+		$ProjectGroup = new ProjectGroup();
+		$list = $ProjectGroup->getGroupList($param['project_id']);
+		if($list->count()){
+			return returnCode(1,'',$list);
+		}else{
+			return returnCode(0,'此项目下暂无其他成员');
+		}
+	}
+
+	/**
+	 * 转让项目
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/21 15:48
+	 * @param Request $request
+	 * @return mixed
+	 */
+	public function giveProject(Request $request)
+	{
+		$param = $request->all();
+
+		if(!password_verify($param['password'],session('user')->password)){
+			return returnCode(0,'密码错误');
+		}
+
+		$group = $this->projectGroup($param['project_id']);
+		if(!$group['is_give']){
+			return returnCode(0,'无权限操作此项');
+		}
+
+		$ProjectGroup = new ProjectGroup();
+		$Project = new Project();
+		DB::beginTransaction();
+		try{
+			$Project->projectGive($param);
+			$ProjectGroup->projectGroupDel(['uid' => $param['uid'],'project_id' => $param['project_id']]);
+			DB::commit();
+			return returnCode(1,'z转让成功');
+		}catch(\Exception $e){
+			DB::rollBack();
+			return returnCode(0,'转让失败');
 		}
 	}
 }
