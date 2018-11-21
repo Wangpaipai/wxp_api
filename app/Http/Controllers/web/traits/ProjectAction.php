@@ -90,7 +90,7 @@ trait ProjectAction
 		}
 		$ProjectGroup = new ProjectGroup();
 		$user = session('user');
-		if($user->id == $project->uid){
+		if($user->id == $project->uid || $user->is_admin){
 			$group['is_show'] = 1;
 			$group['is_update'] = 1;
 			$group['is_del'] = 1;
