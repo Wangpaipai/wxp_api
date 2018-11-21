@@ -65,7 +65,7 @@
             </div>
             <!-- /.row -->
             <div class="row" id="sortable">
-                    <div class="col-lg-3 view-project js_viewProject pannel-project" v-for="(item,index) in project" @click="locationProject(item.id,index,1)">
+                    <div class="col-lg-3 view-project pannel-project" v-for="(item,index) in project" @click="locationProject(item.id,index,1)">
                         <div class="panel panel-default">
                             <div class="panel-heading">
                             <span class="head-title">
@@ -73,9 +73,9 @@
                                 @{{ item.name }}
                             </span>
                             <span class="head-btn" @click.stop>
-                                <a data-type="1" class="fa hidden-xs fa-pencil js_addProjectBtn" @click="objectUpdate" data-title='编辑项目' :data-id="item.id"></a>
-                                <a data-type="1" class="fa hidden-xs fa-trash-o js_deleteProjectBtn" @click="objectRemove" data-title='删除项目' :data-id="item.id" :data-index="index"></a>
-                                <a data-type="1" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive" data-title='转让项目' :data-id="item.id"></a>
+                                <a href="javascript:void(0);" data-type="1" class="fa hidden-xs fa-pencil js_addProjectBtn" @click="objectUpdate" data-title='编辑项目' :data-id="item.id"></a>
+                                <a href="javascript:void(0);" data-type="1" class="fa hidden-xs fa-trash-o js_deleteProjectBtn" @click="objectRemove" data-title='删除项目' :data-id="item.id" :data-index="index"></a>
+                                <a href="javascript:void(0);" data-type="1" class="fa hidden-xs fa-exchange js_transferProjectBtn" @click="objectGive" data-title='转让项目' :data-id="item.id"></a>
                             </span>
                             </div>
                             <div class="panel-body">
