@@ -270,7 +270,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="item in api.response">
+                                            <tr v-for="(item,index) in api.response">
                                                 <td>
                                                     <input class="form-control" v-model="item.name"/>
                                                 </td>
