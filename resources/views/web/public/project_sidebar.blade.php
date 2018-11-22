@@ -1,5 +1,5 @@
 <div id="appModel">
-    <div class="navbar-default sidebar" role="navigation" style="margin-top: 0;overflow: auto" :style="{height:domHeight - 50 + 'px'}">
+    <div class="navbar-default sidebar" role="navigation" style="margin-top: 0;overflow: auto" :style="{height:domHeight - 45 + 'px'}">
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
                 <li>
