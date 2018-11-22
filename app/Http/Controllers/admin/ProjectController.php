@@ -42,8 +42,7 @@ class ProjectController extends Controller
 		$ProjectApi = new ProjectApi();
 		$ProjectGroup = new ProjectGroup();
 		$ProjectModel = new ProjectModel();
-		$list = $Project->searchProject($param)->toArray();
-
+		$list = $Project->projectList($param)->toArray();
 		if(!$list['total']){
 			return returnCode(0);
 		}

@@ -140,4 +140,29 @@ class Project extends Model
 			})
 			->count();
 	}
+
+	/**
+	 * 后端管理项目列表
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/22 13:53
+	 * @param array $data
+	 * @return mixed
+	 */
+	public function projectList(array  $data)
+	{
+		$field = [
+			'project.id','project.name','project.uid','project.created_at','users.name as username'
+		];
+		return $this
+			->leftJoin('users','project.uid','=','users.id')
+			->when(isset($data['username']) && $data['username'],function($query)use($data){
+				return $query->where('users.name','like','%' . $data['username'] . '%')->orWhere('users.email','like','%' . $data['username'] . '%');
+			})
+			->when(isset($data['name']) && $data['name'],function($query)use($data){
+				return $query->where('project.name','like','%' . $data['name'] . '%');
+			})
+			->select($field)
+			->orderBy('project.created_at','desc')
+			->paginate(15);
+	}
 }
