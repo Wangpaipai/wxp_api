@@ -79,10 +79,10 @@ class Project extends Model
 		return $this
 			->leftJoin('users','project.uid','=','users.id')
 //			->leftJoin('project_group','project.id','=','project_group.project_id')
-			->when($data['username'],function($query)use($data){
+			->when(isset($data['username']) && $data['username'],function($query)use($data){
 				return $query->where('users.name','like','%' . $data['username'] . '%');
 			})
-			->when($data['name'],function($query)use($data){
+			->when(isset($data['name']) && $data['name'],function($query)use($data){
 				return $query->where('project.name','like','%' . $data['name'] . '%');
 			})
 			->where('project.is_show',self::SHOW_TRUE)
