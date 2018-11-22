@@ -122,4 +122,22 @@ class Project extends Model
 	{
 		return $this->where('id',$data['project_id'])->update(['uid' => $data['uid']]);
 	}
+
+	/**
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/22 10:02
+	 * @param $data
+	 * @return mixed
+	 */
+	public function getProjectCount($data)
+	{
+		return $this
+			->when(isset($data['created_at']) && $data['created_at'],function($query)use($data){
+				return $query->where('created_at','>',$data['created_at']);
+			})
+			->when(isset($data['uid']) && $data['uid'],function($query)use($data){
+				return $query->where('uid',$data['uid']);
+			})
+			->count();
+	}
 }

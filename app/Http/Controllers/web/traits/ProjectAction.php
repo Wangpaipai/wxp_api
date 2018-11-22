@@ -27,7 +27,7 @@ trait ProjectAction
 	{
 		$project = $this->projectDetail($project_id);
 		$group = $this->projectGroup($project_id,$project);
-		if($project->uid != session('user')->id && (!$group || !$group->is_show)){
+		if($project->uid != session('user')->id && (!$group || !$group['is_show'])){
 			abort(404);
 		}
 		$menu = $this->projectModel($project_id);

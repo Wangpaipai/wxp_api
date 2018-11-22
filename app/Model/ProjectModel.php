@@ -105,4 +105,23 @@ class ProjectModel extends Model
 		];
 		return $this->where('project_id',$project_id)->get($field);
 	}
+
+	/**
+	 * 获取模块数
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/22 10:03
+	 * @param $data
+	 * @return mixed
+	 */
+	public function getProjectModelCount($data)
+	{
+		return $this
+			->when(isset($data['created_at']) && $data['created_at'],function($query)use($data){
+				return $query->where('created_at','>',$data['created_at']);
+			})
+			->when(isset($data['project_id']) && $data['project_id'],function($query)use($data){
+				return $query->where('project_id',$data['project_id']);
+			})
+			->count();
+	}
 }

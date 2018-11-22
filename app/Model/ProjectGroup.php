@@ -221,4 +221,24 @@ class ProjectGroup extends Model
 			->select($field)
 			->get();
 	}
+
+	/**
+	 * 获取项目成员数
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/22 11:10
+	 * @param $project_id
+	 * @return mixed
+	 */
+	public function groupCount($data)
+	{
+		return $this
+			->when(isset($data['project_id']) && $data['project_id'],function($query)use($data){
+				return $query->where('project_id',$data['project_id']);
+			})
+			->when(isset($data['uid']) && $data['uid'],function($query)use($data){
+				return $query->where('uid',$data['uid']);
+			})
+			->where('apply',self::APPLY_TRUE)
+			->count();
+	}
 }

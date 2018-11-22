@@ -20,8 +20,6 @@
 
         <li class="dropdown js_notifyDropdown">
 
-{{--            {{include_file name="notify/load"}}--}}
-
         </li>
 
         <li class="dropdown">
@@ -44,12 +42,4 @@
             </ul>
         </li>
     </ul>
-    <!-- /.navbar-top-links -->
-    {{--{{if $sidebar}}--}}
-
-    {{--{{include_file name="public/{{$sidebar}}"}}--}}
-
-    {{--{{/if}}--}}
-
-    <!-- /.navbar-static-side -->
 </nav>

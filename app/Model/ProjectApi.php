@@ -81,4 +81,23 @@ class ProjectApi extends Model
 	{
 		return $this->where('id',$api['id'])->where('project_id',$api['project_id'])->update($api);
 	}
+
+	/**
+	 * 虎丘项目接口数
+	 * Created by：Mp_Lxj
+	 * @date 2018/11/22 10:04
+	 * @param $data
+	 * @return mixed
+	 */
+	public function getProjectApiCount($data)
+	{
+		return $this
+			->when(isset($data['created_at']) && $data['created_at'],function($query)use($data){
+				return $query->where('created_at','>',$data['created_at']);
+			})
+			->when(isset($data['project_id']) && $data['project_id'],function($query)use($data){
+				return $query->where('project_id',$data['project_id']);
+			})
+			->count();
+	}
 }

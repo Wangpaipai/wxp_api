@@ -2,33 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=0">
-    <title>王丨小牌API管理系统 - @yield('title')</title>
+    <title>王小牌API后台管理系统——@yield('title')</title>
     <link href="{{ asset('static/plugins/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
     <link href="{{ asset('static/plugins/metisMenu/dist/metisMenu.min.css') }}" rel="stylesheet">
     <link href="{{ asset('static/css/common.css') }}" rel="stylesheet">
-    <link href="{{ asset('static/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('static/plugins/validform/css.css') }}" rel="stylesheet">
+    <link href="{{ asset('static/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ asset('static/plugins/validform/css.css') }}" rel="stylesheet" type="text/css">
     <style>
+
         @media(min-width:768px) {
+
             .sidebar {
                 z-index: 1;
                 position: absolute;
-                width: 250px;
-                margin-top: 51px;
+                width: 200px;
+                margin-top: 0px;
             }
-
-            .navbar-top-links .dropdown-messages,
-            .navbar-top-links .dropdown-tasks,
-            .navbar-top-links .dropdown-alerts {
-                margin-left: auto;
-            }
-        }
-
-        @media(min-width:768px) {
             #page-wrapper {
                 position: inherit;
-                margin: 0;
+                margin: 0 0 0 200px;
                 padding: 0 30px;
                 border-left: 1px solid #e7e7e7;
             }
@@ -39,9 +33,9 @@
 </head>
 
 <body>
-
 @yield('content')
 
+@include('admin.public.record')
 @if(isset($user))
     <div class="modal fade" id="js_settingProfileModal" tabindex="-1" role="dialog" aria-labelledby="settingLabel" aria-hidden="true">
         <form id="js_settingProfileForm" role="form" method="post">
@@ -150,7 +144,3 @@
 </script>
 @yield('js')
 </html>
-
-
-
-
