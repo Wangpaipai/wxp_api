@@ -147,6 +147,7 @@
                 project:'{{ $project->id }}',
                 createShow:false,
                 windowHeight:0,
+                domHeight:0,
                 is_create:false,
                 model:{
                     id:'',
@@ -176,6 +177,7 @@
             created:function(){
                 var that = this;
                 that.windowHeight = window.innerHeight;
+                that.domHeight = document.body.scrollHeight;
                 getMenu(that);
             },
             methods:{
