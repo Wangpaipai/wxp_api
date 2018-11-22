@@ -177,7 +177,7 @@
             created:function(){
                 var that = this;
                 that.windowHeight = window.innerHeight;
-                that.domHeight = document.body.scrollHeight;
+                that.domHeight = document.body.scrollHeight > that.windowHeight ? document.body.scrollHeight : that.windowHeight;
                 getMenu(that);
             },
             methods:{
