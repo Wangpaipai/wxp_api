@@ -1,9 +1,13 @@
 <div id="appModel">
-    <div class="navbar-default sidebar" role="navigation" style="margin-top: 0">
+    <div class="navbar-default sidebar" role="navigation" style="margin-top: 0;overflow: auto" :style="{height:windowHeight - 50 + 'px'}">
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
                 <li>
                     <a href="{{ route('web.project.api.home',['id' => $project->id]) }}"><i class="fa fa-home fa-fw"></i> 项目主页</a>
+                </li>
+
+                <li v-if="group.is_update">
+                    <a class="hidden-xs" data-id="{{ $project->id }}" @click="addModel" data-title="添加模块" href="javascript:void(0);"><i class="fa fa-fw fa-plus"></i> 添加模块</a>
                 </li>
 
                 {{--<li class="module-item js_moduleItem" v-for="(item,index) in menu" :data-id="item.id" :class="[model_id == item.id ? 'active' : '']">--}}
@@ -26,10 +30,6 @@
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
-                </li>
-
-                <li v-if="group.is_update">
-                    <a class="hidden-xs" data-id="{{ $project->id }}" @click="addModel" data-title="添加模块" href="javascript:void(0);"><i class="fa fa-fw fa-plus"></i> 添加模块</a>
                 </li>
 
             </ul>

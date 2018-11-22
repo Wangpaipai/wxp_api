@@ -81,7 +81,7 @@
 </div>
 <!-- /#wrapper -->
 
-<hr>
+
 <p class="text-center">{{get_config('copyright')}}</p>
 
 {{include_file name='public/footer'}}

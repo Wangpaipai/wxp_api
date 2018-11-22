@@ -34,7 +34,7 @@
                                     </div>
                                 </div>
                                 <button type="button" href="javascript:void(0);" data-succ="{{ route('web.login') }}" data-url="{{ route('web.register.registerCheck') }}" class="btn btn-lg btn-success btn-block js_submit">快速注册</button>
-                                <hr>
+
                                 <a href="{{ route('web.login') }}" class="btn btn-default btn-block">已有账号，直接登录</a>
 
                             </fieldset>
@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <hr>
+
         @include('web.public.record')
     </div>
 @endsection

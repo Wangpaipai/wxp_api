@@ -245,7 +245,7 @@
 
         </div>
         <!-- /#page-wrapper -->
-        <hr>
+
         <!-- 删除接口模态框 -->
         <div class="modal fade" id="js_deleteApiModal" tabindex="2" role="dialog">
             <div class="modal-dialog" role="document">

@@ -87,7 +87,7 @@
         </div>
     </div>
 
-    <hr>
+
 @endsection
 
 @section('js')

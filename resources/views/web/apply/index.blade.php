@@ -115,7 +115,7 @@
 
         </div>
         <!-- /#wrapper -->
-        <hr>
+
 
     </div>
 @endsection

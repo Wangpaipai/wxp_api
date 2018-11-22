@@ -35,7 +35,7 @@
                                 <!-- Change this to a button or input when using this as a form -->
                                 <a href="javascript:void(0);" @click="loginCheck" class="btn btn-lg btn-success btn-block js_submit">立即登录</a>
 
-                                <hr>
+
 
                                 <a href="{{ route('web.register') }}" class="btn btn-default btn-block">还没有账号？免费注册</a>
 
@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <hr>
+
         @include('web.public.record')
     </div>
 @endsection

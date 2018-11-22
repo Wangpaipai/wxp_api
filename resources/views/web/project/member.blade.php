@@ -130,7 +130,7 @@
 
             </div><!-- /.modal-dialog -->
         </div>
-        <hr>
+
 
 
 

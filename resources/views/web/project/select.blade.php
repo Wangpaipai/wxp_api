@@ -156,7 +156,7 @@
 
     </div>
 
-    <hr>
+
     <p class="text-center">
         @include('web.public.record')
     </p>
