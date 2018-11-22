@@ -126,7 +126,6 @@
                     {{--<!-- /.panel -->--}}
                 {{--</div>--}}
             {{--</div>--}}
-            @include('admin.public.record')
         </div>
     </div>
 @endsection
