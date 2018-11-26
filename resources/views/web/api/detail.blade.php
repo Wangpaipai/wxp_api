@@ -204,7 +204,7 @@
                                     @if($api->response)
                                         @foreach(unserialize($api->response) as $value)
                                             <tr>
-                                                <td style="text-align: left;padding-left: 50px;">{{ $value['name'] }}</td>
+                                                <td>{{ $value['name'] }}</td>
                                                 <td>{{ $value['brief'] ?? '' }}</td>
                                                 <td>{{ $value['type'] ?? '' }}</td>
                                                 <td>{{ $value['remark'] ?? '' }}</td>
