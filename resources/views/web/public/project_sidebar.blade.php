@@ -1,5 +1,5 @@
 <div id="appModel">
-    <div class="navbar-default sidebar" role="navigation" style="margin-top: 0;overflow: auto" :style="{height:domHeight - 45 + 'px'}">
+    <div class="navbar-default sidebar" role="navigation" style="margin-top: 0;overflow: auto" :style="{height:domHeight}">
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
                 <li>
@@ -177,7 +177,12 @@
             created:function(){
                 var that = this;
                 that.windowHeight = window.innerHeight;
-                that.domHeight = document.body.scrollHeight > that.windowHeight ? document.body.scrollHeight : that.windowHeight;
+                var width = window.innerWidth;
+                if(width <= 750){
+                    that.domHeight = 'auto';
+                }else{
+                    that.domHeight = document.body.scrollHeight > that.windowHeight ? document.body.scrollHeight + 'px' : that.windowHeight + 'px';
+                }
                 getMenu(that);
             },
             methods:{
