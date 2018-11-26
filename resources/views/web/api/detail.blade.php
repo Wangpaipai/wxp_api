@@ -112,7 +112,7 @@
                                     <tr class="success">
                                         <th>字段键</th>
                                         <th>字段值</th>
-                                        <th>备注说明</th>
+                                        <th style="max-width: 33%">备注说明</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -154,7 +154,7 @@
                                         <th>字段类型</th>
                                         <th>是否必填</th>
                                         <th>默认值</th>
-                                        <th>备注说明</th>
+                                        <th style="max-width: 25%">备注说明</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -197,7 +197,7 @@
                                         <th>字段名</th>
                                         <th>字段含义</th>
                                         <th>字段类型</th>
-                                        <th>备注说明</th>
+                                        <th style="max-width: 30%">备注说明</th>
                                     </tr>
                                     </thead>
                                     <tbody>
