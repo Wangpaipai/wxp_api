@@ -341,5 +341,14 @@
         clipboard.on('error', function() {
             alert('地址复制失败，请手动复制', 3000);
         });
+
+        var height = window.innerHeight;
+        var width = window.innerWidth;
+        if(width > 750){
+            $('#wrapper').css({
+                height:height - 60,
+                overflow: 'auto'
+            });
+        }
     </script>
 @endsection

@@ -23,6 +23,9 @@
             .navbar-top-links .dropdown-alerts {
                 margin-left: auto;
             }
+            body{
+                overflow: hidden;
+            }
         }
 
         @media(min-width:768px) {

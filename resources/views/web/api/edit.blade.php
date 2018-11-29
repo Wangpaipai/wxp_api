@@ -26,7 +26,7 @@
 
     @include('web.public.nav')
     @include('web.public.project_sidebar')
-    <div id="wrapper">
+    <div id="wrapper" style="overflow: auto" :style="{height:domHeight}">
         <div id="page-wrapper">
             <form role="form" method="post">
                 <div class="row">
@@ -378,7 +378,8 @@
                 api_id:'{{ $api_id }}',
                 api:{},
                 getApiUrl:'{{ route('web.project.api.getDetail') }}',
-                updateUrl:'{{ route('web.project.api.update') }}'
+                updateUrl:'{{ route('web.project.api.update') }}',
+                domHeight:'auto'
             },
             created:function(){
                 var that = this;
@@ -399,6 +400,15 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+
+                var windowHeight = window.innerHeight;
+                var width = window.innerWidth;
+                if(width <= 750){
+                    that.domHeight = 'auto';
+                }else{
+//                    that.domHeight = document.body.scrollHeight > that.windowHeight ? document.body.scrollHeight + 'px' : that.windowHeight + 'px';
+                    that.domHeight = windowHeight - 60 + 'px';
+                }
             },
             methods:{
                 updateApi:function(event){

@@ -181,7 +181,8 @@
                 if(width <= 750){
                     that.domHeight = 'auto';
                 }else{
-                    that.domHeight = document.body.scrollHeight > that.windowHeight ? document.body.scrollHeight + 'px' : that.windowHeight + 'px';
+//                    that.domHeight = document.body.scrollHeight > that.windowHeight ? document.body.scrollHeight + 'px' : that.windowHeight + 'px';
+                    that.domHeight = that.windowHeight - 60 + 'px';
                 }
                 getMenu(that);
             },
