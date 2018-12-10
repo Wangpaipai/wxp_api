@@ -30,7 +30,7 @@
                 <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-user">
-                <li><a href=""><i class="fa fa-search fa-fw"></i> 搜索项目</a>
+                <li><a href="{{ route('web.project.search') }}"><i class="fa fa-search fa-fw"></i> 搜索项目</a>
                 </li>
 
                 <li><a href="#" data-toggle="modal" data-target="#js_settingProfileModal"><i class="fa fa-user fa-fw"></i> 个人设置</a>
