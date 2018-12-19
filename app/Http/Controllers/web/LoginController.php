@@ -17,6 +17,7 @@ class LoginController extends Controller
 	 */
 	public function login()
 	{
+		sleep(20);
 		return view('web.login');
 	}
 
